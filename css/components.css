@@ -339,3 +339,5 @@ article.big-card { display: flex; flex-direction: column; }
 .edu-big { font-family: var(--head); font-weight: 700; font-size: 88px; line-height: 1; letter-spacing: -.03em; color: var(--accent); margin: 0 0 14px; }
 .edu-award p { color: var(--muted); margin: 0; }
 @media (max-width: 900px) { .edu-grid { grid-template-columns: 1fr; } .edu-card, .edu-award { padding: 26px; } .edu-big { font-size: 68px; } }
+.edu-logo { display: inline-flex; align-items: center; justify-content: center; background: #fff; border-radius: 12px; padding: 8px 12px; margin-bottom: 20px; }
+.edu-logo img { display: block; height: 38px; width: auto; }
