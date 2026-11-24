@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Media Service | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="A self-hosted media service with single-use upload tickets, file-type verification and image derivatives." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="teddypet-media.html" />
+  <link rel="alternate" hreflang="vi" href="vi/teddypet-media.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/teddypet-media.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Media Service</span></div>
+    <div class="eyebrow">TEDDYPET · MEDIA SERVICE</div>
+    <h1 style="margin-top:20px">Uploads behind a <span class="outline">ticket</span></h1>
+    <p class="lead">A self-hosted media service with single-use upload tickets, file-type verification and image derivatives.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · NO AUTOMATED TESTS</span><span class="pill">NestJS</span><span class="pill">MongoDB</span><span class="pill">Sharp</span><span class="pill">Upload tickets</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Problem</small><p>Public uploads attract oversized files, disguised file types and replayed requests.</p></div><div class="tldr-card"><small>Approach</small><p>Hashed single-use tickets bound to user, name, type and size; MIME allowlist plus magic-byte check; derivatives generated with Sharp.</p></div><div class="tldr-card"><small>Proof</small><p>Implemented and documented. There are no automated tests yet, and this page says so.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Problem</div><div class="cs-body"><p class="lead">Letting users upload files is where many apps get hurt: a renamed executable, a gigantic body streamed before any check, or one upload request replayed many times.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Constraints</div><div class="cs-body"><ul class="rule-list"><li>A ticket must be consumed before the server accepts the request body.</li><li>The real file type is decided from the bytes, not the filename.</li><li>Large originals must not be served directly to shoppers.</li><li>File bytes stay on disk and metadata in a database.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Design</div><div class="cs-body"><ol class="design-steps"><li><h4>Upload tickets</h4><p>A ticket is stored hashed, expires after 10 minutes and is bound to the user, file name, type and size. A guard reserves the single-use ticket before Multer accepts the body.</p></li><li><h4>Verify the file, not the name</h4><p>Allowed types are JPEG, PNG, WebP, GIF, MP4, WebM, MP3, M4A, WAV, OGG and PDF, checked against a MIME allowlist and magic bytes.</p></li><li><h4>Derivatives</h4><p>Sharp produces WebP, thumbnail and blur versions so pages load small images and not the original.</p></li><li><h4>Storage split</h4><p>Bytes live on the filesystem, metadata (<code>Folder</code>, <code>MediaAsset</code>, <code>UploadTicket</code>) in MongoDB. Deletes are soft, so records carry <code>deleted</code>, <code>deletedAt</code> and <code>deletedBy</code>.</p></li><li><h4>Shared token trust</h4><p>The service verifies Core access tokens with the same secret and a dedicated audience.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Evidence in code</div><div class="cs-body"><ul class="evi-list"><li><code>file-manager-service/src/modules/file-manager/upload-ticket.guard.ts</code><span>Single-use ticket reservation</span></li><li><code>file-manager-service/src/modules/file-manager/file-security.util.ts</code><span>MIME allowlist and magic-byte checks</span></li><li><code>file-manager-service/src/modules/file-manager/file-manager.service.ts</code><span>Tickets, processing, files and folders</span></li><li><code>file-manager-service/prisma/schema.prisma</code><span>Folder, MediaAsset, UploadTicket</span></li></ul><p class="src-note">Paths are relative to the TeddyPet repository.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Verification</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> What is shown</h4><ul><li>Ticket issue and upload, magic-byte checks, WebP / thumbnail / blur derivatives.</li><li>File listing, rename and soft delete, folder create, rename and recursive delete.</li><li>A liveness endpoint and a hardened Dockerfile and compose file.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Not verified / not built</h4><ul><li>No automated tests, lint or CI for this service.</li><li>Some folder routes do not register as documented (stacked route decorators register only the top path).</li><li>Any valid Core token, including a customer's, can request an upload ticket; library routes are limited to the super admin.</li><li>Not built: upload rate limits, per-user quotas, private or authenticated media delivery, garbage collection of soft-deleted files, and database or disk checks in the health endpoint.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Trade-offs</div><div class="cs-body"><div class="tradeoffs"><div><h4>Self-hosted filesystem</h4><p>Cheap and simple to start, but it is not object storage, so a multi-host setup needs rework.</p></div><div><h4>Soft deletes keep bytes</h4><p>Safe and recoverable, but disk usage only grows until a cleanup job exists.</p></div><div><h4>Honest gap</h4><p>This is the least-tested part of the platform. It is listed here so the gaps are visible before they matter.</p></div></div></div></section>
+  <div class="deep-box reveal"><h4>Detailed notes</h4><ul><li><a href="portfolio-file-manager.html">Service overview and upload sequence</a><span class="pill">English</span></li></ul></div>
+  <div class="cs-nav"><a href="teddypet-chat.html"><small>← Previous</small><strong>Real-time Support Chat</strong></a><a href="teddypet-frontend.html" style="text-align:right"><small>Next →</small><strong>Storefront & Admin</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

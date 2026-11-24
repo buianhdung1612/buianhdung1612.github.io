@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog | Bùi Anh Dũng</title>
+  <meta name="description" content="Dev Journal, my public technical teaching blog, and my database knowledge map." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="blog.html" />
+  <link rel="alternate" hreflang="vi" href="vi/blog.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html" aria-current="page">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/blog.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Blog</span></div>
+    <div class="eyebrow">Dev Journal</div>
+    <h1 style="margin-top:20px">A teaching blog on <span class="outline">how software works</span></h1>
+    <p class="lead">Dev Journal is my public technical blog, with its own single-author CMS. This page also holds the knowledge map of database topics I am studying and writing about.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap">
+  <div class="note-box reveal" style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap">
+    <div><strong>Dev Journal</strong><br />Built with Next.js, Tiptap, Prisma and PostgreSQL. Public pages cover posts with search, series, categories, tags, RSS and a sitemap; the admin sign-in uses GitHub.</div>
+    <a class="btn btn-mint" href="https://github.com/buianhdung1612/dev-journal" target="_blank" rel="noopener">View on GitHub <i class="fas fa-external-link-alt"></i></a>
+  </div>
+</div></section>
+<section class="section pt-0"><div class="wrap">
+  <div class="split-head reveal" style="margin-bottom:40px"><div class="eyebrow">Knowledge map</div><h2 class="h2" style="font-size:36px">Database</h2><p class="lead">How databases store, find, process and protect data, from core internals to distributed systems.</p></div>
+  <div class="insight-panel reveal" style="margin-bottom:24px;padding:40px 34px">
+    <div class="insight-head" style="margin-bottom:26px"><div><div class="eyebrow">01</div><h2 style="font-size:28px;margin-top:14px">Fundamentals</h2><p class="lead" style="font-size:15px;margin-top:8px">The core building blocks inside a database.</p></div><span class="pill">05 TOPICS</span></div>
+    <div class="card-grid"><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>01</span></div><h3 style="font-size:19px">Storage Fundamentals</h3><p>How records, pages, and files are laid out and accessed.</p></div></div><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>02</span></div><h3 style="font-size:19px">Index &amp; Storage Structures</h3><p>Data structures that make reads and writes efficient.</p></div></div><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>03</span></div><h3 style="font-size:19px">Query Engine</h3><p>How a query becomes a plan and runs against data.</p></div></div><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>04</span></div><h3 style="font-size:19px">Transactions &amp; Concurrency</h3><p>Isolation, locking, and safe work across concurrent users.</p></div></div><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>05</span></div><h3 style="font-size:19px">Durability &amp; Recovery</h3><p>Logs, checkpoints, and recovering after a failure.</p></div></div></div></div>
+  <div class="insight-panel reveal" style="margin-bottom:24px;padding:40px 34px">
+    <div class="insight-head" style="margin-bottom:26px"><div><div class="eyebrow">02</div><h2 style="font-size:28px;margin-top:14px">Performance</h2><p class="lead" style="font-size:15px;margin-top:8px">Making data systems responsive as they grow.</p></div><span class="pill">02 TOPICS</span></div>
+    <div class="card-grid"><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>06</span></div><h3 style="font-size:19px">Database Performance</h3><p>Finding bottlenecks across queries, indexes, and workloads.</p></div></div><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>07</span></div><h3 style="font-size:19px">Scaling &amp; Distributed Database</h3><p>Replication, partitioning, consistency, and their trade-offs.</p></div></div></div></div>
+  <div class="insight-panel reveal" style="margin-bottom:24px;padding:40px 34px">
+    <div class="insight-head" style="margin-bottom:26px"><div><div class="eyebrow">03</div><h2 style="font-size:28px;margin-top:14px">Database Engines</h2><p class="lead" style="font-size:15px;margin-top:8px">How popular database engines work under the hood.</p></div><span class="pill">03 TOPICS</span></div>
+    <div class="card-grid"><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>08</span></div><h3 style="font-size:19px">PostgreSQL Internals</h3><p>Storage, indexing, query planning, and execution.</p></div></div><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>09</span></div><h3 style="font-size:19px">MySQL / InnoDB Internals</h3><p>InnoDB pages, indexes, transactions, and recovery.</p></div></div><div class="card"><div class="card-body"><div class="card-meta"><span><i class="fas fa-hashtag"></i>10</span></div><h3 style="font-size:19px">MongoDB Internals</h3><p>Document storage, indexes, and distributed behavior.</p></div></div></div></div>
+  <p class="work-cta reveal">More areas to come: frameworks, architecture and beyond.</p>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

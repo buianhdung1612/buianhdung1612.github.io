@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout &amp; Inventory | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="How TeddyPet keeps stock, coupons and orders consistent when requests race, retry or arrive twice." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="teddypet-checkout.html" />
+  <link rel="alternate" hreflang="vi" href="vi/teddypet-checkout.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/teddypet-checkout.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Checkout & Inventory</span></div>
+    <div class="eyebrow">TEDDYPET · CHECKOUT & INVENTORY</div>
+    <h1 style="margin-top:20px">Checkout that never <span class="outline">oversells</span></h1>
+    <p class="lead">How TeddyPet keeps stock, coupons and orders consistent when requests race, retry or arrive twice.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · TEST CASES IN REPO</span><span class="pill">PostgreSQL</span><span class="pill">Prisma</span><span class="pill">Idempotency</span><span class="pill">Serializable</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Problem</small><p>Two buyers click “buy” on the last unit, a client retries after a lost response, an admin saves a product from a stale form.</p></div><div class="tldr-card"><small>Approach</small><p>Idempotency keys, one atomic conditional stock update per SKU, a serializable transaction with bounded retry, and release-once markers.</p></div><div class="tldr-card"><small>Proof</small><p>PostgreSQL integration tests: 100 distinct keys fight for 10 units and exactly 10 orders succeed.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Problem</div><div class="cs-body"><p class="lead">A naive checkout reads the stock, checks it, then writes the new value. Under concurrency that sequence can sell the same unit twice, create two orders for one click, or lose a reservation when an admin saves an old product form. Mobile clients also retry when a response is lost, so the same purchase can arrive more than once.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Constraints</div><div class="cs-body"><ul class="rule-list"><li>Never sell more units than exist, even when requests for the last unit race.</li><li>The same Idempotency-Key with the same payload returns the same order; the same key with a different payload is rejected with <code>409</code>.</li><li>Stock reservation, coupon use, order, order items and the first payment attempt commit together or not at all.</li><li>Money is an integer in VND and is recalculated on the backend, never trusted from the client.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Design</div><div class="cs-body"><ol class="design-steps"><li><h4>One key, one purchase</h4><p>The scope is <code>checkout:user:&lt;id&gt;</code>. The key and the canonical request body are hashed with SHA-256 and stored with the order in the same transaction. A <code>pg_advisory_xact_lock</code> on that scope and hash serializes concurrent requests that carry the same key.</p></li><li><h4>Reserve with one atomic statement</h4><p>Stock is taken with <code>updateMany({ where: { id, stock: { gte: quantity } }, data: { stock: { decrement: quantity } } })</code>. If the affected row count is not exactly 1, the request is rejected with a conflict. There is no read-then-write window.</p></li><li><h4>Serializable transactions with bounded retry</h4><p>The transaction runs at Serializable isolation. Serialization failures and deadlocks (<code>P2034</code>, <code>P2002</code>, SQLSTATE <code>40001</code> / <code>40P01</code>) are retried up to five attempts with exponential backoff and jitter. Only database work runs inside the callback so a rolled-back attempt is safe to repeat.</p></li><li><h4>Release exactly once</h4><p>Cancelling or expiring an order claims <code>stockReleasedAt</code> with a conditional update under a row lock (<code>SELECT … FOR UPDATE</code> on the order). Stock and the coupon redemption are restored only by the request that wins the claim, and an audit row records it.</p></li><li><h4>Stale admin edits cannot erase reservations</h4><p>Admin stock edits carry the snapshot they started from. A stale snapshot is rejected and the whole product update rolls back, so a checkout that reserved stock in the meantime is preserved.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Evidence in code</div><div class="cs-body"><div class="code-card"><div class="code-head"><span>Reserving stock: a single conditional update</span><code>Linh_BE/src/routes/orders/orders.service.ts</code></div><pre><code>for (const sku of skus) {
+  const quantity = requested.get(sku.id)!.quantity;
+  const reserved = await tx.sKU.updateMany({
+    where: { id: sku.id, deleted: false, stock: { gte: quantity } },
+    data: { stock: { decrement: quantity } },
+  });
+  if (reserved.count !== 1)
+    throw new ConflictException(/* stock changed, retry */);
+}</code></pre></div><ul class="evi-list"><li><code>Linh_BE/src/routes/orders/orders.service.ts</code><span>Checkout transaction, reservation, coupon handling</span></li><li><code>Linh_BE/src/shared/idempotency/idempotency.service.ts</code><span>Key and payload hashing, advisory lock, replay and mismatch handling</span></li><li><code>Linh_BE/src/shared/database/serializable.ts</code><span>Serializable wrapper with bounded retry and jitter</span></li><li><code>Linh_BE/src/routes/orders/inventory/order-inventory.service.ts</code><span>Release-once stock and coupon restoration</span></li><li><code>Linh_BE/src/routes/payments/payment-postgres.integration.spec.ts</code><span>Race, rollback and stale-edit scenarios</span></li></ul><p class="src-note">Paths are relative to the TeddyPet repository.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Verification</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> What is shown</h4><ul><li>100 distinct keys compete for 10 units: exactly 10 orders are accepted, 90 are conflicts, stock ends at 0, and each saved order has one item and one payment attempt.</li><li>Concurrent requests with the same key commit one order, one stock movement and one initial payment attempt.</li><li>The same key with a different payload is serialized and the mismatched intent is never recorded.</li><li>A failure while creating the payment attempt rolls back stock, coupon, order items and the idempotency record.</li><li>The last coupon use is reserved once and restored once, even on repeated cancellation.</li><li>A stale admin stock edit is rejected and rolled back; of two admins editing from the same snapshot only one succeeds.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Not verified / not built</h4><ul><li>The tests exist in the repository. Their results were not re-run when this page was written.</li><li>No throughput or latency figure is claimed. The scenarios prove correctness, not capacity.</li><li>Not yet exercised on production-like infrastructure or across several API instances.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Trade-offs</div><div class="cs-body"><div class="tradeoffs"><div><h4>Serializable isolation costs throughput</h4><p>Serializable plus retries is the simplest way to stay correct, but a very hot SKU will see retries and conflicts. The system returns a clear conflict instead of overselling.</p></div><div><h4>Held stock can sit idle</h4><p>Stock stays reserved until the payment deadline (15 minutes by default, plus up to 5 to verify). Unpaid orders therefore hold inventory for a while.</p></div><div><h4>Uncertain payments never auto-release stock</h4><p>If a provider result is unknown, the order goes to review after 24 hours and only an admin can release it. This avoids selling stock that may already be paid.</p></div><div><h4>Everything lives in PostgreSQL</h4><p>There is no Redis data cache in front of the catalogue. That keeps one source of truth at the cost of read load on the database.</p></div></div></div></section>
+  
+  <div class="cs-nav"><span></span><a href="teddypet-payments.html" style="text-align:right"><small>Next →</small><strong>Payments & Fulfilment</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

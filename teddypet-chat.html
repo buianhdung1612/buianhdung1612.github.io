@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Real-time Support Chat | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="A separate customer-to-staff chat service with idempotent sends, ordered messages and replicas behind Nginx." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="teddypet-chat.html" />
+  <link rel="alternate" hreflang="vi" href="vi/teddypet-chat.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/teddypet-chat.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Real-time Support Chat</span></div>
+    <div class="eyebrow">TEDDYPET · REAL-TIME SUPPORT CHAT</div>
+    <h1 style="margin-top:20px">Chat that <span class="outline">survives</span> disconnects</h1>
+    <p class="lead">A separate customer-to-staff chat service with idempotent sends, ordered messages and replicas behind Nginx.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · COVERED BY TESTS (2026-11-15)</span><span class="pill">Socket.IO</span><span class="pill">Redis</span><span class="pill">Outbox</span><span class="pill">NestJS</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Problem</small><p>Sockets drop, tabs retry and instances restart, yet no message may be lost, duplicated or reordered.</p></div><div class="tldr-card"><small>Approach</small><p>Database commit before ACK, unique client message ids, per-conversation sequence numbers, a transactional outbox and Redis fan-out.</p></div><div class="tldr-card"><small>Proof</small><p>Unit specs plus two integration specs: the Nest module against PostgreSQL, and two Socket.IO replicas over Redis.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Problem</div><div class="cs-body"><p class="lead">A support chat feels trivial until the network misbehaves. A customer on mobile loses signal mid-send, a browser retries, a server instance restarts, and staff must lose access the moment their session is revoked. Naive designs duplicate messages, reorder them, or acknowledge a message that never reached the database.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Constraints</div><div class="cs-body"><ul class="rule-list"><li>A message is acknowledged only after it is committed to the database.</li><li>Sending the same message twice must not create two rows.</li><li>Clients that missed events must be able to catch up deterministically.</li><li>Chat must stay separate from commerce data and use its own database.</li><li>AI helpers must not receive raw personal data.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Design</div><div class="cs-body"><ol class="design-steps"><li><h4>A separate service and database</h4><p>Core owns identity. Chat verifies a 5-minute JWT issued by Core (audience <code>chat-service</code>) whose scopes — <code>chat:self</code>, <code>chat:reply</code>, <code>chat:read_all</code>, <code>chat:assign</code> — are checked in the service. Chat never connects to Core's database.</p></li><li><h4>Commit first, then ACK</h4><p>The database commit comes before a successful acknowledgement. <code>(senderId, clientMessageId)</code> is unique, which makes sending idempotent. <code>seq</code> orders messages per conversation and <code>changeVersion</code> orders edits.</p></li><li><h4>Sockets are best effort</h4><p>Real-time push is not the source of truth. Clients catch up with <code>afterSeq</code> and <code>changedAfter</code>, so a missed event costs one request, not data.</p></li><li><h4>Transactional outbox</h4><p>Side effects are enqueued in the same transaction as the message by the outbox service, and their handlers are idempotent.</p></li><li><h4>Scale out</h4><p>The compose file runs two replicas behind Nginx. A Redis adapter fans out Socket.IO events; Redis is also used for rate limits, spam counters and presence, never as the source of truth.</p></li><li><h4>Staff routing and safety</h4><p>Conversations are auto-assigned to online staff, spam triggers an automatic lock, a 10-day retention job deletes old data, and attachments are checked by magic bytes and downloaded through HMAC-signed links. Core can revoke a session in chat immediately.</p></li><li><h4>AI assist with redaction</h4><p>Reply suggestions, rewrite, summary and sentiment use the Claude API after personal data is masked by <code>redact()</code>. Customers never see the sentiment value.</p></li><li><h4>Operability</h4><p>Single-line JSON logs carry a correlation id, and Prometheus metrics use low-cardinality labels.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Evidence in code</div><div class="cs-body"><ul class="evi-list"><li><code>chat-service/src/chat.service.ts</code><span>Business rules, authorization, idempotency, ordering, locks</span></li><li><code>chat-service/src/chat.gateway.ts</code><span>Socket.IO namespace /chat: send, read, typing, presence</span></li><li><code>chat-service/src/outbox.service.ts</code><span>Transactional outbox worker</span></li><li><code>chat-service/src/redis-io.adapter.ts</code><span>Cross-replica fan-out</span></li><li><code>chat-service/src/session-revocation.service.ts</code><span>Immediate session revocation from Core</span></li><li><code>chat-service/src/ai/redact.ts</code><span>Personal-data masking before AI calls</span></li><li><code>chat-service/compose.yaml</code><span>Two replicas behind Nginx, shared attachment volume</span></li><li><code>.github/workflows/chat-service.yml</code><span>CI workflow</span></li></ul><p class="src-note">Paths are relative to the TeddyPet repository.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Verification</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> What is shown</h4><ul><li>Text and attachment messages, infinite-scroll history, presence push, typing and unread counts per conversation.</li><li>Auto-assignment with history, open / closed / locked status and automatic spam locks, ratings.</li><li>Message and conversation deletion with file cleanup, and the 10-day retention job.</li><li>AI suggestions, rewrite, summary and sentiment (the model call is mocked in tests).</li><li>Immediate session revocation from Core, Prometheus metrics and a CI workflow.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Not verified / not built</h4><ul><li>Real Claude API calls: the tests mock the model.</li><li>A full <code>local-e2e.cjs</code> run together with Core, and the chat UI in a browser.</li><li>Backup, TLS, alert rules and failover for the compose deployment.</li><li>Not built: message search, notifications outside the chat, object storage and antivirus scanning for attachments, and queued message fan-out.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Trade-offs</div><div class="cs-body"><div class="tradeoffs"><div><h4>Best-effort sockets, reliable catch-up</h4><p>It is simpler and cheaper than guaranteeing delivery over a socket, and the sequence numbers make recovery deterministic.</p></div><div><h4>Outbox means at-least-once</h4><p>Handlers must be idempotent, which is extra care in exchange for never losing a side effect.</p></div><div><h4>Attachments on a shared volume</h4><p>A shared filesystem volume is easy to run but is not object storage, so scaling beyond one host would need a change.</p></div><div><h4>A database per service</h4><p>No cross-service joins; identity crosses the boundary only through short-lived signed tokens.</p></div></div></div></section>
+  
+  <div class="cs-nav"><a href="teddypet-api-design.html"><small>← Previous</small><strong>API Design</strong></a><a href="teddypet-media.html" style="text-align:right"><small>Next →</small><strong>Media Service</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

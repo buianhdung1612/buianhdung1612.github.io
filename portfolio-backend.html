@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ecommerce Backend | TeddyPet</title>
+  <meta name="description" content="TeddyPet Commerce Backend case study." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/project-base.css" />
+  <link rel="stylesheet" href="css/project.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><a href="teddypet-api-design.html">API Design</a><span>/</span><span>Backend design</span></div>
+    <div class="eyebrow">TEDDYPET · COMMERCE API</div>
+    <h1 style="margin-top:20px">Ecommerce Backend</h1>
+    <p class="lead">A domain API that keeps catalog, stock, customer, and order rules consistent across the client storefront and admin console.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap project-case-study">
+<div class="note-box" style="margin-bottom:40px">Detailed note, written in English. The Vietnamese case study summarises this page. <a href="teddypet-api-design.html" style="color:var(--accent)">API Design →</a> · <a href="vi/teddypet-api-design.html" style="color:var(--accent)">Thiết kế API →</a></div>
+
+    
+    
+    <div class="project-cover"><img src="img/portfolio/backend-api-cover.svg" alt="Client and Admin applications send requests to NestJS API, Prisma, and PostgreSQL" /></div>
+    <div class="project-overview-grid">
+      <section class="project-case-block"><span class="project-section-index">01 / DOMAIN API</span><h2>One validated API boundary for both applications.</h2><p>NestJS modules expose ecommerce capabilities through REST endpoints. The API validates incoming data at the request boundary, applies business rules in services, and persists relational domain data with Prisma and PostgreSQL.</p></section>
+      <aside class="project-facts"><div><span>Framework</span><strong>NestJS · TypeScript</strong></div><div><span>Validation</span><strong>Zod DTOs</strong></div><div><span>Data access</span><strong>Prisma ORM</strong></div><div><span>Database</span><strong>PostgreSQL</strong></div></aside>
+    </div>
+    <section class="project-query-section"><div class="project-section-heading"><span class="project-section-index">02 / DOMAIN RESPONSIBILITIES</span><h2>Model the rules the UI depends on.</h2></div>
+      <div class="project-query-grid">
+        <article><h3><span>01</span> Catalog & variants</h3><p>Products, categories, brands, and SKUs form the catalog used by the client and admin applications. Variant and stock data are connected to the parent product rather than duplicated into separate frontend models.</p></article>
+        <article><h3><span>02</span> Inventory & pagination</h3><p>Stock filtering aggregates quantities across SKUs before the API paginates results. This keeps totals and page boundaries correct for admin filters and avoids filtering only the currently visible page.</p></article>
+        <article><h3><span>03</span> Cart & orders</h3><p>Order creation is server-authoritative: submitted cart intent is validated against current product, price, and stock rules before a durable order is created.</p></article>
+        <article><h3><span>04</span> Reviews & content</h3><p>Review and blog endpoints support the customer-facing experience and store administration, with resource-oriented API contracts for queries and writes.</p></article>
+      </div>
+    </section>
+    <section class="project-query-section feature-overview-section"><div class="project-section-heading"><span class="project-section-index">02.1 / API DESIGN PATTERNS</span><h2>Thiết kế API từ contract đến xử lý các tình huống lỗi.</h2><p>Case study trình bày 12 quyết định: resource, contract, truy vấn danh sách, Redis rate limiting, idempotency, webhook, async processing, recovery và tiến hóa API. Cơ chế trong mã nguồn được phân biệt với hướng mở rộng.</p></div>
+      <div class="project-query-grid feature-overview-grid">
+        <article class="feature-overview-card"><span class="feature-overview-label">CONTRACT · RATE LIMITING · WEBHOOK · RELIABILITY</span><h3>API Design Patterns</h3><p>Từ HTTP contract và pagination đến bảo vệ Auth bằng Redis, VNPay IPN, GHN retry/recovery và lộ trình Async/LRO. Mỗi quyết định gắn với ví dụ của dự án.</p><a class="feature-overview-link" href="portfolio-feature-api-design.html">Xem 12 quyết định thiết kế API <span aria-hidden="true">→</span></a></article>
+      </div>
+    </section>
+    <section class="project-query-section feature-overview-section"><div class="project-section-heading"><span class="project-section-index">02.2 / ORDER & PAYMENT FLOW</span><h2>Luồng tạo đơn và thanh toán của TeddyPet.</h2><p>Từ yêu cầu checkout đến giữ hàng, xác minh tiền và tạo vận đơn. Sơ đồ tách rõ COD, VNPay và các trường hợp kết quả chưa rõ.</p></div>
+      <div class="project-query-grid feature-overview-grid">
+        <article class="feature-overview-card"><span class="feature-overview-label">CHECKOUT · VNPAY · GHN · RECOVERY</span><h3>Order & Payment System</h3><p>Order và PaymentAttempt có vòng đời riêng. Chỉ tạo vận đơn sau khi Admin xác nhận; với VNPay cần kết quả thanh toán đã xác minh.</p><a class="feature-overview-link" href="portfolio-payment-system.html">Xem sơ đồ luồng tạo đơn <span aria-hidden="true">→</span></a></article>
+      </div>
+    </section>
+    <section class="project-engineering-section"><div class="project-section-heading"><span class="project-section-index">03 / ENGINEERING DECISIONS</span><h2>Protect consistency at the service boundary.</h2></div><div class="project-decision-list">
+      <div><span>01</span><p><strong>Validate untrusted input at the edge.</strong> Zod schemas define accepted request shapes before domain services work with them.</p></div>
+      <div><span>02</span><p><strong>Keep the database relational.</strong> Prisma models product, SKU, cart, order, and customer relationships in PostgreSQL.</p></div>
+      <div><span>03</span><p><strong>Aggregate before paging.</strong> Inventory-aware filters run against the full matching data set, so API totals agree with the page contents.</p></div>
+      <div><span>04</span><p><strong>Keep media references lightweight.</strong> The commerce API stores stable file paths returned by File Manager; binary file bodies belong to the dedicated media service.</p></div>
+    </div></section>
+    <section class="project-auth-flow" aria-labelledby="project-auth-flow-title">
+      <div class="project-section-heading"><span class="project-section-index">04 / JWT AUTHENTICATION</span><h2 id="project-auth-flow-title">A short-lived JWT session with refresh-token rotation.</h2><p>The flow validates credentials, issues a signed access JWT, protects API requests, and renews the session through a rotating HttpOnly cookie.</p></div>
+      <figure class="project-auth-flow-figure">
+        <img src="img/portfolio/backend-auth-flow.svg" alt="JWT authentication lifecycle: credential validation, access JWT and HttpOnly refresh cookie issuance, guarded API requests, refresh-token rotation, and device-session revocation at logout." width="1440" height="1180" />
+        <figcaption>JWT access token: 15 minutes, sent as a Bearer token and kept in memory. Refresh JWT: 7 days, HttpOnly cookie; only its SHA-256 hash is stored in PostgreSQL.</figcaption>
+      </figure>
+      <div class="project-auth-flow-note"><strong>Authentication and authorization are separate checks.</strong><span><code>JwtAuthGuard</code> verifies the signed access JWT and expiry. <code>PermissionGuard</code> checks the active account and its API permission before the protected operation runs.</span></div>
+      <details class="project-auth-files">
+        <summary>Explore the authentication implementation</summary>
+        <div class="project-auth-files-grid">
+          <div><strong>Backend · NestJS</strong><ul>
+            <li><code>Linh_BE/src/routes/auth/auth.controller.ts</code> — login, me, refresh, logout, and HttpOnly cookie options</li>
+            <li><code>Linh_BE/src/routes/auth/auth.service.ts</code> — password verification, JWT issue, refresh rotation, and logout rules</li>
+            <li><code>Linh_BE/src/routes/auth/auth.repo.ts</code> — user, device, and refresh-session persistence</li>
+            <li><code>Linh_BE/src/routes/auth/auth.dto.ts</code> — request validation</li>
+            <li><code>Linh_BE/src/routes/auth/jwt.strategy.ts</code> and <code>jwt-auth.guard.ts</code> — access JWT verification</li>
+            <li><code>Linh_BE/src/shared/guards/permission.guard.ts</code> — role permission enforcement</li>
+            <li><code>Linh_BE/src/shared/services/permissions-sync.service.ts</code> — permission synchronization before startup</li>
+          </ul></div>
+          <div><strong>Frontend · Next.js</strong><ul>
+            <li><code>Linh_FE/src/client/features/auth/pages/Login.tsx</code> and <code>Linh_FE/src/admin/features/authen/hooks/use-login.ts</code> — login form flows</li>
+            <li><code>Linh_FE/src/client/features/auth/api/auth.api.ts</code> and <code>Linh_FE/src/admin/api/auth.api.ts</code> — session API calls</li>
+            <li><code>Linh_FE/src/api/index.ts</code> — Bearer header, refresh-on-401, and request retry</li>
+            <li><code>Linh_FE/src/client/features/auth/stores/useAuthStore.ts</code> — in-memory access token and persisted display identity</li>
+          </ul></div>
+        </div>
+      </details>
+    </section>
+    <div class="media-project-flow-note"><strong>Service boundary</strong><span>Client FE and Admin FE → Linh_BE REST API → PostgreSQL. File upload bytes follow a separate path to File Manager, while Linh_BE stores the resulting media reference.</span></div>
+    <section class="project-interview-note"><span class="project-section-index">INTERVIEW WALKTHROUGH</span><p>“I use a short-lived signed JWT for API authentication and keep it in memory. A separate HttpOnly refresh JWT renews the session; the database stores only its SHA-256 hash, and rotation is atomic to prevent token reuse. Every protected operation verifies identity first, then checks the account’s API permission. File Manager handles media bytes while the commerce API remains authoritative for inventory and order rules.”</p></section>
+    <div class="project-footer-tags"><span>NestJS</span><span>TypeScript</span><span>Zod</span><span>Prisma</span><span>PostgreSQL</span><span>REST API</span><span>Domain Modules</span></div>
+  
+  <div style="margin-top:50px"><a class="btn btn-dark" href="teddypet-api-design.html">← API Design</a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

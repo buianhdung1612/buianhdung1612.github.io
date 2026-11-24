@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payments &amp; Fulfilment | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="VNPay and GHN integrated around verified callbacks, reconciliation and explicit recovery states." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="teddypet-payments.html" />
+  <link rel="alternate" hreflang="vi" href="vi/teddypet-payments.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/teddypet-payments.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Payments & Fulfilment</span></div>
+    <div class="eyebrow">TEDDYPET · PAYMENTS & FULFILMENT</div>
+    <h1 style="margin-top:20px">Payments that <span class="outline">don't guess</span></h1>
+    <p class="lead">VNPay and GHN integrated around verified callbacks, reconciliation and explicit recovery states.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED / TESTED (MOCKED PROVIDER)</span><span class="pill">VNPay</span><span class="pill">GHN</span><span class="pill">Reconciliation</span><span class="pill">Workers</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Problem</small><p>A provider result can arrive late, twice, never, or after the customer cancelled.</p></div><div class="tldr-card"><small>Approach</small><p>Separate Order, Payment and Shipping state; verify every callback; reconcile with QueryDR; provider calls stay outside database transactions.</p></div><div class="tldr-card"><small>Proof</small><p>Integration scenarios for concurrent IPNs, IPN racing QueryDR, tampered IPNs and late payment after cancel (provider mocked).</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Problem</div><div class="cs-body"><p class="lead">Payment results are not reliable messages. The IPN may be delivered twice, delayed beyond the order deadline, or lost entirely; the browser return URL can be forged or closed early. If the system guesses, it either ships unpaid orders or loses money that really arrived.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Constraints</div><div class="cs-body"><ul class="rule-list"><li>Only a verified result (signature, merchant, amount and attempt) may change payment state.</li><li>IPN and QueryDR must converge on one outcome without double-settling.</li><li>Money that arrives after cancellation must be recorded, not silently reopened or ignored.</li><li>Calls to VNPay and GHN must not run inside a database transaction.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Design</div><div class="cs-body"><ol class="design-steps"><li><h4>Three separate states</h4><p>Order, Payment and Shipping are tracked independently. COD orders are created <code>UNPAID</code> and are never treated as collected at creation or on delivery.</p></li><li><h4>One attempt per try</h4><p>Each VNPay try is a PaymentAttempt with its own <code>txnRef</code>. A failed, still-valid attempt can be retried on the same order; retries do not extend the deadline.</p></li><li><h4>Verify, then settle</h4><p>The IPN checks signature, merchant, amount and attempt. The Return URL only sends the browser to a page that reads status from the backend. IPN and QueryDR share <code>settleSuccess</code> and <code>settleFailure</code>, so a success arriving through both paths is settled once.</p></li><li><h4>Reconcile instead of waiting</h4><p>When an IPN is lost, QueryDR asks VNPay for the truth. New orders use QueryDR before cancel; the broader reconciliation switch stays off by design.</p></li><li><h4>Unknown stays unknown</h4><p>An uncertain result never releases stock automatically. After 24 hours it goes to review and only an admin can release it. Late money after cancellation is recorded and flagged, without reopening the order or creating a shipment.</p></li><li><h4>Fulfilment behind a gate</h4><p>An admin confirms the order (stock still held, no payment review, VNPay must be PAID). A worker then claims the order conditionally and calls GHN outside the transaction, retrying with the same <code>client_order_code</code>.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Evidence in code</div><div class="cs-body"><ul class="evi-list"><li><code>Linh_BE/src/routes/payments/payment-settlement.service.ts</code><span>Shared settleSuccess / settleFailure</span></li><li><code>Linh_BE/src/routes/payments/payment-callback-receipt.service.ts</code><span>Raw IPN receipts</span></li><li><code>Linh_BE/src/routes/payments/payment-reconciliation.service.ts</code><span>QueryDR reconciliation</span></li><li><code>Linh_BE/src/routes/payments/providers/</code><span>VNPay provider code</span></li><li><code>Linh_BE/docs/specs/payment-workflow.md</code><span>Design, operations and test plan</span></li></ul><p class="src-note">Paths are relative to the TeddyPet repository.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Verification</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> What is shown</h4><ul><li>Concurrent signed IPNs are deduplicated and record one financial transition.</li><li>A concurrent IPN and QueryDR success settle only once.</li><li>A tampered IPN is rejected without writing financial evidence.</li><li>A signed IPN after customer cancel keeps the order cancelled and the stock released, and records the money.</li><li>Expiration serializes against a late payment and never releases stock twice.</li><li>After a provider network error the payment stays unresolved, then recovers on retry.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Not verified / not built</h4><ul><li>These scenarios run against a mocked provider. A real VNPay Sandbox transaction through a public HTTPS callback has not been evidenced yet; the planned verification file records the checklist.</li><li>Refunds are manual: an admin records money sent outside the system. VNPay's refund API is not used.</li><li>No throughput or latency figure is claimed.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Trade-offs</div><div class="cs-body"><div class="tradeoffs"><div><h4>Slower, but never wrong</h4><p>Holding stock past the deadline so a late signed IPN can settle a live order costs inventory time, and avoids selling goods that were already paid for.</p></div><div><h4>Manual refunds</h4><p>Keeping refunds as a manual record avoids a half-built automatic flow, and leaves a real gap for later.</p></div><div><h4>In-process workers</h4><p>Background jobs use in-process cron (<code>@nestjs/schedule</code>) instead of a message broker, which keeps the stack small but ties job claiming to conditional database updates.</p></div></div></div></section>
+  <div class="deep-box reveal"><h4>Detailed notes</h4><ul><li><a href="portfolio-payment-system.html">Full order and payment flow with diagram</a><span class="pill">Vietnamese</span></li></ul></div>
+  <div class="cs-nav"><a href="teddypet-checkout.html"><small>← Previous</small><strong>Checkout & Inventory</strong></a><a href="teddypet-auth.html" style="text-align:right"><small>Next →</small><strong>Authentication & Sessions</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

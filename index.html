@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bùi Anh Dũng – Software Engineer</title>
+  <meta name="description" content="Portfolio of Bùi Anh Dũng, a software engineer focused on backend engineering, full-stack development and system design." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="index.html" />
+  <link rel="alternate" hreflang="vi" href="vi/index.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html" aria-current="page">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/index.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="hero">
+  <div class="hero-portrait" aria-hidden="true"><img src="img/profile.jpg" onerror="this.onerror=null;this.src='img/profile-placeholder.svg'" alt="" /></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <h1><span>Build</span><span class="outline">Reliable</span><span>Systems</span></h1>
+      <div class="hero-side">
+        <h2>Full-stack developer. <span class="accent-text">Backend at heart.</span></h2>
+        <p>Hi, I'm Dũng — a software developer passionate about building reliable, maintainable systems.<br /><br />I enjoy exploring backend architecture, solving real-world problems, and understanding the engineering decisions behind great software.<br /><br /><em class="accent-text">Always curious. Always improving.</em></p>
+        <div class="hero-btns">
+          <a class="btn btn-dark" href="projects.html">Explore My Work</a>
+          <a class="btn btn-outline" href="about.html">About Me <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-foot"><div class="wrap hero-foot-row">
+    <div class="who"><i></i><span>Bùi Anh Dũng - Software Engineer</span></div>
+  </div></div>
+</section>
+
+<section class="section" id="expertise">
+  <div class="wrap">
+    <div class="expertise reveal">
+      <div class="eyebrow">Engineering Focus</div>
+      <div>
+        <h2 class="h2 focus-title">I turn complex problems into reliable, maintainable, and meaningful software.</h2>
+        <p class="lead focus-lead">Combining backend engineering, full-stack development, and system design to build software that works today and evolves tomorrow.</p>
+      </div>
+    </div>
+    <div class="focus reveal" data-focus>
+      <h3 class="outline focus-head">What I Work On</h3>
+      <button class="service-row focus-tab is-active" type="button" id="focus-tab-backend" aria-expanded="true" aria-controls="focus-backend"><span class="ic"><i class="lnr lnr-code" aria-hidden="true"></i></span><span><span class="focus-name">Backend Engineering</span><span class="focus-tagline">APIs and services that behave predictably.</span></span></button>
+      <div class="panel focus-panel" id="focus-backend" role="region" aria-labelledby="focus-tab-backend"><i class="lnr lnr-code big-ic" aria-hidden="true"></i>
+        <div><h4>Backend Engineering</h4><p>Designing APIs and services with clear contracts, validated input and behaviour that stays predictable under retries and concurrent requests.</p></div>
+        <div class="tag-row"><span class="pill">NestJS</span><span class="pill">REST / OpenAPI</span><span class="pill">Zod</span><span class="pill">Background workers</span></div>
+        <p class="focus-links"><span>See it in</span><a href="teddypet-api-design.html">API Design →</a><a href="teddypet-checkout.html">Checkout & Inventory →</a></p>
+      </div>
+      <button class="service-row focus-tab" type="button" id="focus-tab-architecture" aria-expanded="false" aria-controls="focus-architecture"><span class="ic"><i class="lnr lnr-layers" aria-hidden="true"></i></span><span><span class="focus-name">System Design &amp; Architecture</span><span class="focus-tagline">Boundaries, contracts and trade-offs.</span></span></button>
+      <div class="panel focus-panel" id="focus-architecture" role="region" aria-labelledby="focus-tab-architecture" hidden><i class="lnr lnr-layers big-ic" aria-hidden="true"></i>
+        <div><h4>System Design &amp; Architecture</h4><p>Deciding where responsibilities live, how services talk to each other, and which trade-offs a design accepts, before writing the code.</p></div>
+        <div class="tag-row"><span class="pill">Service boundaries</span><span class="pill">API contracts</span><span class="pill">Consistency</span><span class="pill">Trade-offs</span></div>
+        <p class="focus-links"><span>See it in</span><a href="teddypet.html#architecture">TeddyPet architecture →</a><a href="teddypet-media.html">Media Service →</a></p>
+      </div>
+      <button class="service-row focus-tab" type="button" id="focus-tab-full-stack" aria-expanded="false" aria-controls="focus-full-stack"><span class="ic"><i class="lnr lnr-laptop-phone" aria-hidden="true"></i></span><span><span class="focus-name">Full Stack Development</span><span class="focus-tagline">From the database to the interface.</span></span></button>
+      <div class="panel focus-panel" id="focus-full-stack" role="region" aria-labelledby="focus-tab-full-stack" hidden><i class="lnr lnr-laptop-phone big-ic" aria-hidden="true"></i>
+        <div><h4>Full Stack Development</h4><p>Building complete products end to end: server rendering where SEO matters, client state where interaction does, and an API both sides agree on.</p></div>
+        <div class="tag-row"><span class="pill">Next.js</span><span class="pill">React</span><span class="pill">TanStack Query</span><span class="pill">Generated API types</span></div>
+        <p class="focus-links"><span>See it in</span><a href="teddypet-frontend.html">Storefront & Admin →</a><a href="blog.html">Dev Journal →</a></p>
+      </div>
+      <button class="service-row focus-tab" type="button" id="focus-tab-data" aria-expanded="false" aria-controls="focus-data"><span class="ic"><i class="lnr lnr-database" aria-hidden="true"></i></span><span><span class="focus-name">Database &amp; Data Engineering</span><span class="focus-tagline">Modelling, transactions and consistency.</span></span></button>
+      <div class="panel focus-panel" id="focus-data" role="region" aria-labelledby="focus-tab-data" hidden><i class="lnr lnr-database big-ic" aria-hidden="true"></i>
+        <div><h4>Database &amp; Data Engineering</h4><p>Modelling data, choosing isolation levels and indexes, and keeping records consistent when several writers touch the same rows.</p></div>
+        <div class="tag-row"><span class="pill">PostgreSQL</span><span class="pill">Transactions</span><span class="pill">Indexing</span><span class="pill">Redis</span><span class="pill">MongoDB</span></div>
+        <p class="focus-links"><span>See it in</span><a href="teddypet-checkout.html">Checkout & Inventory →</a><a href="blog.html">Database learning map →</a></p>
+      </div>
+      <button class="service-row focus-tab" type="button" id="focus-tab-security" aria-expanded="false" aria-controls="focus-security"><span class="ic"><i class="lnr lnr-lock" aria-hidden="true"></i></span><span><span class="focus-name">Security &amp; Reliability</span><span class="focus-tagline">Safe sessions and recoverable failures.</span></span></button>
+      <div class="panel focus-panel" id="focus-security" role="region" aria-labelledby="focus-tab-security" hidden><i class="lnr lnr-lock big-ic" aria-hidden="true"></i>
+        <div><h4>Security &amp; Reliability</h4><p>Authentication that can be revoked, operations that are safe to retry, and explicit recovery states when an external provider's result is uncertain.</p></div>
+        <div class="tag-row"><span class="pill">Token rotation</span><span class="pill">MFA</span><span class="pill">Rate limiting</span><span class="pill">Idempotency</span><span class="pill">Reconciliation</span></div>
+        <p class="focus-links"><span>See it in</span><a href="teddypet-auth.html">Authentication & Sessions →</a><a href="teddypet-payments.html">Payments & Fulfilment →</a></p>
+      </div>
+      <button class="service-row focus-tab" type="button" id="focus-tab-real-time" aria-expanded="false" aria-controls="focus-real-time"><span class="ic"><i class="lnr lnr-bubble" aria-hidden="true"></i></span><span><span class="focus-name">Real-time Systems</span><span class="focus-tagline">Live updates that survive reconnects.</span></span></button>
+      <div class="panel focus-panel" id="focus-real-time" role="region" aria-labelledby="focus-tab-real-time" hidden><i class="lnr lnr-bubble big-ic" aria-hidden="true"></i>
+        <div><h4>Real-time Systems</h4><p>Real-time delivery over WebSockets with idempotent sends, a stable message order and fan-out across server replicas.</p></div>
+        <div class="tag-row"><span class="pill">Socket.IO</span><span class="pill">Redis pub/sub</span><span class="pill">Transactional outbox</span></div>
+        <p class="focus-links"><span>See it in</span><a href="teddypet-chat.html">Real-time Support Chat →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="projects">
+  <div class="wrap">
+    <div class="split-head with-aside reveal">
+      <div class="eyebrow">Selected Work</div>
+      <h2 class="h2">From Ideas to Working Systems.</h2>
+      <p class="lead">A selection of projects and engineering case studies exploring real-world problems, architectural decisions, and practical solutions.</p>
+    </div>
+    <h3 class="group-label reveal">Projects</h3>
+    <div class="project-grid">
+      <a class="project-card reveal" style="transition-delay:0ms" href="teddypet.html">
+        <div class="project-thumb"><img src="img/portfolio/petcommerce-cover.svg" alt="" loading="lazy" /></div>
+        <div class="project-meta"><h3>TeddyPet</h3><div class="project-tags"><span class="pill">Next.js</span><span class="pill">NestJS</span><span class="pill">PostgreSQL</span></div></div>
+        <p class="project-desc">An e-commerce platform in four parts: a commerce API, a storefront and admin console, a media service and a real-time support chat.</p>
+      </a>
+      <a class="project-card reveal" style="transition-delay:100ms" href="blog.html">
+        <div class="project-thumb"><img src="img/portfolio/dev-journal-home.webp" alt="" loading="lazy" /></div>
+        <div class="project-meta"><h3>Dev Journal</h3><div class="project-tags"><span class="pill">Next.js</span><span class="pill">Tiptap</span><span class="pill">Prisma</span></div></div>
+        <p class="project-desc">A technical teaching blog with its own CMS: learning paths, interview questions and quizzes. Built, not deployed yet.</p>
+      </a>
+    </div>
+    <h3 class="group-label reveal">Engineering Case Studies</h3>
+    <ol class="index-list">
+      <li><a class="index-row reveal" href="teddypet-checkout.html"><span class="ix-num">01</span><span class="ix-main"><strong>Checkout &amp; Inventory Consistency</strong><span>How TeddyPet keeps stock, coupons and orders consistent when requests race, retry or arrive twice.</span></span><span class="ix-side"><b>TeddyPet</b>IMPLEMENTED · TEST CASES IN REPO</span><span class="ix-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span></a></li>
+      <li><a class="index-row reveal" href="teddypet-payments.html"><span class="ix-num">02</span><span class="ix-main"><strong>Payment Processing &amp; Recovery</strong><span>VNPay and GHN integrated around verified callbacks, reconciliation and explicit recovery states.</span></span><span class="ix-side"><b>TeddyPet</b>IMPLEMENTED / TESTED (MOCKED PROVIDER)</span><span class="ix-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span></a></li>
+      <li><a class="index-row reveal" href="teddypet-auth.html"><span class="ix-num">03</span><span class="ix-main"><strong>Authentication &amp; Session Management</strong><span>Short-lived access tokens, rotating refresh sessions, MFA and abuse limits, designed so logout means logout.</span></span><span class="ix-side"><b>TeddyPet</b>IMPLEMENTED</span><span class="ix-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span></a></li>
+      <li><a class="index-row reveal" href="teddypet-chat.html"><span class="ix-num">04</span><span class="ix-main"><strong>Real-time Communication</strong><span>A separate customer-to-staff chat service with idempotent sends, ordered messages and replicas behind Nginx.</span></span><span class="ix-side"><b>TeddyPet</b>IMPLEMENTED · COVERED BY TESTS (2026-11-15)</span><span class="ix-arrow" aria-hidden="true"><i class="fas fa-arrow-right"></i></span></a></li>
+    </ol>
+    <p class="work-cta reveal">Three more case studies cover API design, the media service and the frontend. <a href="projects.html">Browse all projects →</a></p>
+  </div>
+</section>
+
+<section class="section pt-0" id="about-developer">
+  <div class="wrap">
+    <div class="panel-section reveal">
+      <div class="founder-grid">
+        <div class="eyebrow">About the Developer</div>
+        <h2 class="h2">Curious by Nature. An Engineer by Choice.</h2>
+        <p class="lead" style="font-size:16px">I'm passionate about understanding how software works beneath the surface and turning that knowledge into practical, reliable systems.</p>
+      </div>
+      <div class="founder-body">
+        <div>
+          <div class="founder-photo sm"><img src="img/profile-placeholder.svg" alt="" aria-hidden="true" /></div>
+          <div class="trust-row"><div class="avatars"><span>N</span><span>P</span><span>+</span></div><span>NestJS · Prisma · Next.js</span></div>
+        </div>
+        <div class="founder-photo"><img src="img/profile.jpg" onerror="this.onerror=null;this.src='img/profile-placeholder.svg'" alt="Bùi Anh Dũng" /></div>
+        <div class="founder-text quote-block">
+          <span class="quote-icon"><i class="fas fa-quote-right"></i></span>
+          <q style="padding-left:18px">Always learning. Always building.</q>
+          <div class="quote-by"><div><strong>Bùi Anh Dũng</strong><span>Software Engineer</span></div><a class="btn btn-dark" href="about.html">More About Me</a></div>
+          <ul class="checks">
+            <li><i class="fas fa-check"></i>Focused on backend engineering and full-stack development.</li>
+            <li><i class="fas fa-check"></i>Driven by curiosity, problem-solving, and continuous improvement.</li>
+            <li><i class="fas fa-check"></i>Exploring software architecture, system design, and reliable systems.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="mindset">
+  <div class="wrap mindset">
+    <div class="mindset-head reveal">
+      <div class="eyebrow">Engineering Mindset</div>
+      <h2>The Way I Think. <span class="outline">The Way I Build.</span></h2>
+    </div>
+    <div class="mindset-body">
+      <p class="mindset-lead reveal">Technology changes. Good engineering principles remain.</p>
+      <ol class="principles">
+        <li class="reveal"><span class="pr-num" aria-hidden="true">01</span><div><h3>Reliability First</h3><p>Design for failures, not just the happy path.</p></div></li>
+        <li class="reveal"><span class="pr-num" aria-hidden="true">02</span><div><h3>Simplicity Over Complexity</h3><p>Choose the simplest solution that meets the actual requirements.</p></div></li>
+        <li class="reveal"><span class="pr-num" aria-hidden="true">03</span><div><h3>Trade-offs Over Trends</h3><p>Understand why a solution fits before deciding how to build it.</p></div></li>
+        <li class="reveal"><span class="pr-num" aria-hidden="true">04</span><div><h3>Continuous Improvement</h3><p>Learn deeply, validate assumptions, and improve through experience.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="dev-journal">
+  <div class="wrap">
+    <div class="insight-panel reveal">
+      <div class="insight-head">
+        <div><div class="eyebrow">Dev Journal</div><h2>Learn Deeply. Build Better.</h2><p class="lead journal-lead">A space for curious developers to explore how software really works — from programming fundamentals to complex system design.</p></div>
+        <a class="btn btn-dark" href="blog.html">Explore Dev Journal</a>
+      </div>
+      <p class="journal-status"><i class="fas fa-info-circle" aria-hidden="true"></i><span>No posts are public yet: Dev Journal is built but not deployed. These are the learning paths I am studying and writing about.</span></p>
+      <ol class="index-list">
+        <li class="index-row reveal"><span class="ix-num">01</span><span class="ix-main"><strong>Database Fundamentals</strong><span>Storage Fundamentals · Index &amp; Storage Structures · Query Engine · Transactions &amp; Concurrency · Durability &amp; Recovery</span></span><span class="ix-side"><b>5 topics</b>Not published yet</span></li>
+        <li class="index-row reveal"><span class="ix-num">02</span><span class="ix-main"><strong>Database Performance &amp; Scaling</strong><span>Database Performance · Scaling &amp; Distributed Database</span></span><span class="ix-side"><b>2 topics</b>Not published yet</span></li>
+        <li class="index-row reveal"><span class="ix-num">03</span><span class="ix-main"><strong>Database Engines</strong><span>PostgreSQL Internals · MySQL / InnoDB Internals · MongoDB Internals</span></span><span class="ix-side"><b>3 topics</b>Not published yet</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="work-together">
+  <div class="wrap">
+    <div class="cta-banner cta-solo reveal">
+      <div class="cta-copy"><div class="eyebrow">Let's Work Together</div><h2>Great Software Starts With a Conversation.</h2>
+        <div class="hero-btns"><a class="btn btn-mint" href="contact.html">Get in Touch <i class="fas fa-arrow-right" aria-hidden="true"></i></a></div>
+      </div>
+      <div class="cta-side"><p>I'm interested in opportunities to solve meaningful problems, collaborate with great teams, and grow as a software engineer.</p><p class="cta-ask">Have something in mind? Let's connect.</p></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

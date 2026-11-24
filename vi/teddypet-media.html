@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dịch vụ Media | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="Dịch vụ media tự host với ticket upload dùng một lần, kiểm tra loại file và sinh ảnh phái sinh." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../teddypet-media.html" />
+  <link rel="alternate" hreflang="vi" href="teddypet-media.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../teddypet-media.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><a href="projects.html">Dự án</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Dịch vụ Media</span></div>
+    <div class="eyebrow">TEDDYPET · DỊCH VỤ MEDIA</div>
+    <h1 style="margin-top:20px">Upload đi qua một <span class="outline">ticket</span></h1>
+    <p class="lead">Dịch vụ media tự host với ticket upload dùng một lần, kiểm tra loại file và sinh ảnh phái sinh.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · NO AUTOMATED TESTS</span><span class="pill">NestJS</span><span class="pill">MongoDB</span><span class="pill">Sharp</span><span class="pill">Upload tickets</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Vấn đề</small><p>Upload công khai hút file quá lớn, loại file nguỵ trang và request bị phát lại.</p></div><div class="tldr-card"><small>Cách giải</small><p>Ticket băm dùng một lần gắn với user, tên, loại và dung lượng; allowlist MIME cộng kiểm tra magic byte; ảnh phái sinh tạo bằng Sharp.</p></div><div class="tldr-card"><small>Bằng chứng</small><p>Đã cài đặt và có tài liệu. Chưa có test tự động, và trang này nói thẳng điều đó.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Vấn đề</div><div class="cs-body"><p class="lead">Cho người dùng upload file là nơi nhiều ứng dụng bị tổn thương: file thực thi đổi đuôi, body khổng lồ được stream trước khi kiểm tra, hay một request upload bị phát lại nhiều lần.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Ràng buộc</div><div class="cs-body"><ul class="rule-list"><li>Ticket phải được tiêu thụ trước khi server nhận body request.</li><li>Loại file thật được quyết định từ byte, không phải tên file.</li><li>Bản gốc lớn không được phục vụ trực tiếp cho người mua.</li><li>Byte file nằm trên đĩa, metadata nằm trong database.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Thiết kế</div><div class="cs-body"><ol class="design-steps"><li><h4>Ticket upload</h4><p>Ticket được lưu dạng băm, hết hạn sau 10 phút và gắn với user, tên file, loại và dung lượng. Một guard giữ chỗ ticket dùng một lần trước khi Multer nhận body.</p></li><li><h4>Kiểm tra file, không tin tên</h4><p>Các loại được phép là JPEG, PNG, WebP, GIF, MP4, WebM, MP3, M4A, WAV, OGG và PDF, được đối chiếu với allowlist MIME và magic byte.</p></li><li><h4>Ảnh phái sinh</h4><p>Sharp tạo bản WebP, thumbnail và blur để trang tải ảnh nhỏ thay vì bản gốc.</p></li><li><h4>Tách lưu trữ</h4><p>Byte nằm trên filesystem, metadata (<code>Folder</code>, <code>MediaAsset</code>, <code>UploadTicket</code>) trong MongoDB. Xoá là xoá mềm, nên bản ghi mang <code>deleted</code>, <code>deletedAt</code> và <code>deletedBy</code>.</p></li><li><h4>Tin cậy token dùng chung</h4><p>Dịch vụ xác minh access token của Core bằng cùng secret và audience riêng.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Bằng chứng trong code</div><div class="cs-body"><ul class="evi-list"><li><code>file-manager-service/src/modules/file-manager/upload-ticket.guard.ts</code><span>Giữ chỗ ticket dùng một lần</span></li><li><code>file-manager-service/src/modules/file-manager/file-security.util.ts</code><span>Allowlist MIME và kiểm tra magic byte</span></li><li><code>file-manager-service/src/modules/file-manager/file-manager.service.ts</code><span>Ticket, xử lý, file và thư mục</span></li><li><code>file-manager-service/prisma/schema.prisma</code><span>Folder, MediaAsset, UploadTicket</span></li></ul><p class="src-note">Đường dẫn tính từ thư mục gốc của repo TeddyPet.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Kiểm chứng</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> Đã thể hiện</h4><ul><li>Cấp ticket và upload, kiểm tra magic byte, bản phái sinh WebP / thumbnail / blur.</li><li>Liệt kê file, đổi tên và xoá mềm, tạo, đổi tên và xoá đệ quy thư mục.</li><li>Endpoint liveness cùng Dockerfile và compose đã được gia cố.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Chưa kiểm chứng / chưa có</h4><ul><li>Dịch vụ này chưa có test tự động, lint hay CI.</li><li>Một số route thư mục không đăng ký đúng như tài liệu (decorator route chồng nhau chỉ đăng ký đường dẫn trên cùng).</li><li>Mọi token hợp lệ của Core, kể cả của khách, đều xin được ticket upload; route thư viện chỉ dành cho super admin.</li><li>Chưa có: rate limit upload, hạn mức theo user, phân phối media riêng tư hoặc có xác thực, dọn file đã xoá mềm, và kiểm tra database hay đĩa trong endpoint health.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Đánh đổi</div><div class="cs-body"><div class="tradeoffs"><div><h4>Filesystem tự host</h4><p>Rẻ và dễ bắt đầu, nhưng không phải object storage nên cấu hình nhiều máy cần làm lại.</p></div><div><h4>Xoá mềm giữ lại byte</h4><p>An toàn và khôi phục được, nhưng dung lượng đĩa chỉ tăng cho đến khi có job dọn.</p></div><div><h4>Khoảng trống được nói thẳng</h4><p>Đây là phần ít được test nhất của nền tảng. Nó được liệt kê ở đây để các khoảng trống lộ ra trước khi thành vấn đề.</p></div></div></div></section>
+  <div class="deep-box reveal"><h4>Ghi chú chi tiết</h4><ul><li><a href="../portfolio-file-manager.html">Tổng quan dịch vụ và chuỗi upload</a><span class="pill">Tiếng Anh</span></li></ul></div>
+  <div class="cs-nav"><a href="teddypet-chat.html"><small>← Trước</small><strong>Chat hỗ trợ thời gian thực</strong></a><a href="teddypet-frontend.html" style="text-align:right"><small>Tiếp →</small><strong>Storefront & Admin</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

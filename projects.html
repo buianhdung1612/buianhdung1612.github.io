@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects | Bùi Anh Dũng</title>
+  <meta name="description" content="TeddyPet, Dev Journal and the engineering case studies behind them." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="projects.html" />
+  <link rel="alternate" hreflang="vi" href="vi/projects.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/projects.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Projects</span></div>
+    <div class="eyebrow">Projects</div>
+    <h1 style="margin-top:20px">Projects &amp; <span class="outline">case studies</span></h1>
+    <p class="lead">Two projects and the engineering case studies behind them. Each case study states what is implemented, what is tested and what has not been verified yet.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap">
+  <div class="split-head reveal" style="margin-bottom:40px"><div class="eyebrow">Projects</div><h2 class="h2" style="font-size:34px">Start here.</h2></div>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <a class="card reveal" href="teddypet.html"><div class="card-img"><img src="img/portfolio/petcommerce-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">FLAGSHIP · FULLSTACK / BACKEND</span><h3>TeddyPet E-commerce Platform</h3><p>A storefront, an admin console, a commerce API, a media service and a support chat. Overview, architecture and skill-to-evidence map.</p><span class="more">Open overview →</span></div></a>
+    <a class="card reveal" href="blog.html"><div class="card-img"><img src="img/portfolio/dev-journal-home.webp" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge warn">TEACHING BLOG · NOT DEPLOYED YET</span><h3>Dev Journal</h3><p>A technical teaching blog with its own single-author CMS: Next.js, Tiptap, Prisma, PostgreSQL and GitHub sign-in.</p><span class="more">Open the blog page →</span></div></a>
+  </div>
+</div></section>
+<section class="section pt-0"><div class="wrap">
+  <div class="split-head reveal" style="margin-bottom:40px"><div class="eyebrow">Case studies · Backend</div><h2 class="h2" style="font-size:34px">Problems that shaped the API.</h2></div>
+  <div class="card-grid">
+    <a class="card reveal" href="teddypet-checkout.html"><div class="card-img"><img src="img/portfolio/backend-api-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · TEST CASES IN REPO</span><h3>Checkout & Inventory</h3><p>How TeddyPet keeps stock, coupons and orders consistent when requests race, retry or arrive twice.</p><span class="more">Read case study →</span></div></a>
+    <a class="card reveal" href="teddypet-payments.html"><div class="card-img"><img src="img/portfolio/order-payment-flow.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED / TESTED (MOCKED PROVIDER)</span><h3>Payments & Fulfilment</h3><p>VNPay and GHN integrated around verified callbacks, reconciliation and explicit recovery states.</p><span class="more">Read case study →</span></div></a>
+    <a class="card reveal" href="teddypet-auth.html"><div class="card-img"><img src="img/portfolio/backend-auth-flow.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED</span><h3>Authentication & Sessions</h3><p>Short-lived access tokens, rotating refresh sessions, MFA and abuse limits, designed so logout means logout.</p><span class="more">Read case study →</span></div></a>
+    <a class="card reveal" href="teddypet-api-design.html"><div class="card-img"><img src="img/portfolio/backend-api-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED</span><h3>API Design</h3><p>Validated inputs, predictable lists and one OpenAPI file that the frontend types are generated from.</p><span class="more">Read case study →</span></div></a>
+  </div>
+</div></section>
+<section class="section pt-0"><div class="wrap">
+  <div class="split-head reveal" style="margin-bottom:40px"><div class="eyebrow">Case studies · Systems &amp; frontend</div><h2 class="h2" style="font-size:34px">Services around the core, and the app on top.</h2></div>
+  <div class="card-grid">
+    <a class="card reveal" href="teddypet-chat.html"><div class="card-img"><img src="img/portfolio/backend-auth-flow.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · COVERED BY TESTS (2026-11-15)</span><h3>Real-time Support Chat</h3><p>A separate customer-to-staff chat service with idempotent sends, ordered messages and replicas behind Nginx.</p><span class="more">Read case study →</span></div></a>
+    <a class="card reveal" href="teddypet-media.html"><div class="card-img"><img src="img/portfolio/file-manager-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · NO AUTOMATED TESTS</span><h3>Media Service</h3><p>A self-hosted media service with single-use upload tickets, file-type verification and image derivatives.</p><span class="more">Read case study →</span></div></a>
+    <a class="card reveal" href="teddypet-frontend.html"><div class="card-img"><img src="img/portfolio/client-app-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · STATIC CHECKS PASSED (2026-11-06)</span><h3>Storefront & Admin</h3><p>One Next.js app serving the storefront and the admin console, with architecture rules that fail the build.</p><span class="more">Read case study →</span></div></a>
+  </div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

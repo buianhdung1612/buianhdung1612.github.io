@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1180" role="img" aria-labelledby="title description">
+  <title id="title">JWT authentication lifecycle</title>
+  <desc id="description">Sign-in validates credentials and role, issues a short-lived access JWT and HttpOnly refresh JWT, verifies protected requests, rotates refresh tokens, and revokes the device session on logout.</desc>
+  <defs>
+    <linearGradient id="canvas" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbfc"/><stop offset="1" stop-color="#edf4f6"/></linearGradient>
+    <linearGradient id="api" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f47b72"/><stop offset="1" stop-color="#ffc078"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#193544" flood-opacity=".12"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#54717d"/></marker>
+    <marker id="arrow-coral" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#e87970"/></marker>
+    <style>
+      text{font-family:Arial,sans-serif}.eyebrow{font-size:14px;font-weight:700;letter-spacing:2px;fill:#647e88}.headline{font-size:30px;font-weight:700;fill:#173542}.section{font-size:13px;font-weight:700;letter-spacing:1.6px;fill:#c45f59}.title{font-size:19px;font-weight:700;fill:#173542}.copy{font-size:15px;fill:#526b76}.small{font-size:13px;fill:#647e88}.route{font-size:17px;font-weight:700;fill:#173542}.white{fill:#fff}.white-muted{fill:#fbe9dc}.tag{font-size:13px;font-weight:700;fill:#a64c48}
+    </style>
+  </defs>
+  <rect width="1440" height="1180" rx="28" fill="url(#canvas)"/>
+  <text class="eyebrow" x="64" y="58">PETCOMMERCE · AUTHENTICATION</text>
+  <text class="headline" x="64" y="101">JWT authentication lifecycle</text>
+
+  <text class="section" x="64" y="151">01 · SIGN IN AND ISSUE TOKENS</text>
+  <g filter="url(#shadow)">
+    <rect x="64" y="178" width="280" height="124" rx="18" fill="#fff"/>
+    <rect x="535" y="178" width="370" height="124" rx="20" fill="url(#api)"/>
+    <rect x="1094" y="178" width="282" height="124" rx="18" fill="#173542"/>
+  </g>
+  <text class="section" x="88" y="207">BROWSER</text>
+  <text class="title" x="88" y="241">Login form</text>
+  <text class="copy" x="88" y="267">Email + password</text>
+  <text class="section" x="560" y="207">NESTJS AUTH API</text>
+  <text class="route" x="560" y="241">POST /api/v1/auth/login</text>
+  <text class="copy" x="560" y="269">Validate credentials · create device session</text>
+  <text class="section white-muted" x="1120" y="207">IDENTITY SOURCE</text>
+  <text class="title white" x="1120" y="241">User + active role</text>
+  <text class="copy white-muted" x="1120" y="269">PostgreSQL · Prisma</text>
+  <path d="M344 239h178" fill="none" stroke="#54717d" stroke-width="3" marker-end="url(#arrow)"/>
+  <text class="small" x="362" y="218">HTTPS request</text>
+  <path d="M905 239h169" fill="none" stroke="#54717d" stroke-width="3" marker-end="url(#arrow)"/>
+  <text class="small" x="921" y="218">bcrypt compare · role lookup</text>
+
+  <path d="M720 302v48q0 22-28 22H433v20" fill="none" stroke="#e87970" stroke-width="3" marker-end="url(#arrow-coral)"/>
+  <path d="M720 302v48q0 22 28 22h287v20" fill="none" stroke="#e87970" stroke-width="3" marker-end="url(#arrow-coral)"/>
+  <g filter="url(#shadow)">
+    <rect x="170" y="392" width="510" height="146" rx="18" fill="#fff"/>
+    <rect x="760" y="392" width="510" height="146" rx="18" fill="#fff"/>
+  </g>
+  <text class="section" x="198" y="424">ACCESS JWT</text>
+  <text class="title" x="198" y="459">Signed JWT · 15-minute expiry</text>
+  <text class="copy" x="198" y="488">Returned in JSON · held in browser memory</text>
+  <text class="copy" x="198" y="514">Sent as Authorization: Bearer &lt;token&gt;</text>
+  <text class="section" x="788" y="424">REFRESH JWT</text>
+  <text class="title" x="788" y="459">HttpOnly cookie · 7-day expiry</text>
+  <text class="copy" x="788" y="488">Secure in production · SameSite=Lax</text>
+  <text class="copy" x="788" y="514">SHA-256 hash + expiry stored in PostgreSQL</text>
+
+  <text class="section" x="64" y="596">02 · AUTHORIZE EACH PROTECTED REQUEST</text>
+  <g filter="url(#shadow)">
+    <rect x="64" y="623" width="330" height="126" rx="18" fill="#fff"/>
+    <rect x="555" y="623" width="330" height="126" rx="18" fill="#173542"/>
+    <rect x="1046" y="623" width="330" height="126" rx="18" fill="#fff"/>
+  </g>
+  <text class="section" x="90" y="653">REQUEST</text>
+  <text class="title" x="90" y="687">Bearer access JWT</text>
+  <text class="copy" x="90" y="716">Attached to a protected API call</text>
+  <text class="section white-muted" x="581" y="653">AUTHENTICATION</text>
+  <text class="title white" x="581" y="687">JwtAuthGuard</text>
+  <text class="copy white-muted" x="581" y="716">Signature · issuer · audience · expiry</text>
+  <text class="section" x="1072" y="653">AUTHORIZATION</text>
+  <text class="title" x="1072" y="687">PermissionGuard</text>
+  <text class="copy" x="1072" y="716">Active account · role · API permission</text>
+  <path d="M394 686h148" fill="none" stroke="#54717d" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M885 686h148" fill="none" stroke="#54717d" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <text class="section" x="64" y="807">03 · RENEW OR REVOKE THE SESSION</text>
+  <g filter="url(#shadow)">
+    <rect x="64" y="836" width="282" height="132" rx="18" fill="#fff"/>
+    <rect x="392" y="836" width="282" height="132" rx="18" fill="#fff"/>
+    <rect x="720" y="836" width="314" height="132" rx="18" fill="#fff"/>
+    <rect x="1080" y="836" width="296" height="132" rx="18" fill="url(#api)"/>
+  </g>
+  <text class="section" x="88" y="866">ACCESS EXPIRED</text>
+  <text class="title" x="88" y="900">API returns 401</text>
+  <text class="copy" x="88" y="929">Frontend starts one refresh request</text>
+  <text class="section" x="416" y="866">REFRESH REQUEST</text>
+  <text class="route" x="416" y="900">POST /auth/refresh</text>
+  <text class="copy" x="416" y="929">Browser sends HttpOnly cookie</text>
+  <text class="section" x="744" y="866">SERVER VALIDATION</text>
+  <text class="title" x="744" y="900">Verify JWT + stored hash</text>
+  <text class="copy" x="744" y="929">Check expiry · device · one-time use</text>
+  <text class="section" x="1104" y="866">ATOMIC ROTATION</text>
+  <text class="title" x="1104" y="900">Issue new JWT pair</text>
+  <text class="copy" x="1104" y="929">Retry original API request</text>
+  <path d="M346 902h34" fill="none" stroke="#54717d" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M674 902h34" fill="none" stroke="#54717d" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M1034 902h34" fill="none" stroke="#54717d" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="194" y="1025" width="458" height="98" rx="18" fill="#173542"/>
+    <rect x="788" y="1025" width="458" height="98" rx="18" fill="#fff"/>
+  </g>
+  <text class="section white-muted" x="222" y="1055">SIGN OUT</text>
+  <text class="title white" x="222" y="1087">POST /api/v1/auth/logout</text>
+  <text class="section" x="816" y="1055">SESSION REVOCATION</text>
+  <text class="title" x="816" y="1087">Revoke device tokens · clear cookie</text>
+  <path d="M652 1074h120" fill="none" stroke="#e87970" stroke-width="3" marker-end="url(#arrow-coral)"/>
+</svg>

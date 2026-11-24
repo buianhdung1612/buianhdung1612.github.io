@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1620" role="img" aria-labelledby="title desc">
+  <title id="title">Luồng đặt hàng TeddyPet từ giỏ hàng đến giao hàng</title>
+  <desc id="desc">FE chọn giỏ hàng, địa chỉ, coupon và lấy báo giá GHN. BE tạo Order trong transaction, rồi tách nhánh COD và VNPay. VNPay được xác minh bằng IPN hoặc QueryDR. Admin xác nhận trước khi worker tạo vận đơn GHN. Các nhánh hủy, hết hạn và thanh toán đến muộn được xử lý riêng.</desc>
+  <defs>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#173542} .h{font-size:30px;font-weight:800}.sub{font-size:15px;fill:#566a78}.phase{font-size:15px;font-weight:800;letter-spacing:1.5px;fill:#07869b}.head{font-size:19px;font-weight:800}.body{font-size:15px;fill:#334b59}.small{font-size:13px;fill:#516977}.tag{font-size:12px;font-weight:800;letter-spacing:1px}.line{fill:none;stroke:#5d8291;stroke-width:2.5;marker-end:url(#arrow)}.dash{stroke-dasharray:7 6}.box{stroke-width:1.5;rx:16}.number{font-size:15px;font-weight:800;fill:#fff}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#5d8291"/></marker>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#173542" flood-opacity=".09"/></filter>
+  </defs>
+  <rect width="1200" height="1620" fill="#f5fafc"/>
+  <text class="h" x="54" y="58">LUỒNG ĐẶT HÀNG · TEDDYPET</text>
+  <text class="sub" x="55" y="86">Theo code hiện tại · FE / BE / VNPay / GHN · API dưới tiền tố /api/v1</text>
+
+  <text class="phase" x="55" y="132">01  CHUẨN BỊ CHECKOUT  ·  FE ↔ BE</text>
+  <rect class="box" x="55" y="153" width="330" height="152" fill="#fff" stroke="#b8dce8" filter="url(#shadow)"/>
+  <circle cx="83" cy="179" r="16" fill="#087f99"/><text class="number" x="78" y="184">1</text>
+  <text class="head" x="110" y="185">Giỏ hàng và người mua</text>
+  <text class="body" x="76" y="216">Chọn SKU, số lượng; đăng nhập Client.</text>
+  <text class="body" x="76" y="242">Nhập/chọn địa chỉ, khu vực giao hàng.</text>
+  <text class="body" x="76" y="268">Chọn money (COD) hoặc vnpay.</text>
+  <rect class="box" x="435" y="153" width="330" height="152" fill="#fff" stroke="#b8dce8" filter="url(#shadow)"/>
+  <circle cx="463" cy="179" r="16" fill="#087f99"/><text class="number" x="458" y="184">2</text>
+  <text class="head" x="490" y="185">Phí ship và coupon</text>
+  <text class="body" x="456" y="216">POST /client/shipping/quote → GHN fee.</text>
+  <text class="body" x="456" y="242">FE nhận phí + shippingQuoteToken.</text>
+  <text class="body" x="456" y="268">FE kiểm tra mã giảm giá nếu áp dụng.</text>
+  <rect class="box" x="815" y="153" width="330" height="152" fill="#fff" stroke="#b8dce8" filter="url(#shadow)"/>
+  <circle cx="843" cy="179" r="16" fill="#087f99"/><text class="number" x="838" y="184">3</text>
+  <text class="head" x="870" y="185">Gửi ý định đặt hàng</text>
+  <text class="body" x="836" y="216">FE lưu payload + Idempotency-Key.</text>
+  <text class="body" x="836" y="242">POST /client/orders với quote token.</text>
+  <text class="body" x="836" y="268">Mất response: gửi lại cùng key.</text>
+  <path class="line" d="M385 229H428"/><path class="line" d="M765 229H808"/>
+
+  <text class="phase" x="55" y="358">02  BE CHỐT ĐƠN  ·  MỘT TRANSACTION DB</text>
+  <rect class="box" x="55" y="380" width="1090" height="191" fill="#eaf8ef" stroke="#91d7aa" filter="url(#shadow)"/>
+  <circle cx="85" cy="410" r="17" fill="#238454"/><text class="number" x="80" y="416">4</text>
+  <text class="head" x="114" y="417">Xác minh và lưu Order</text>
+  <text class="body" x="82" y="448">Kiểm tra Idempotency-Key + hash payload; xác minh quote token, SKU, tồn kho, coupon; BE tính giá và tổng tiền.</text>
+  <text class="body" x="82" y="478">Trừ stock SKU, tăng lượt coupon; tạo Order + item snapshot + CouponRedemption + PaymentAuditLog.</text>
+  <text class="body" x="82" y="508">Order.status = PENDING_CONFIRMATION. COD: paymentStatus = UNPAID. VNPay: paymentStatus = PENDING, tạo PaymentAttempt.</text>
+  <rect x="82" y="526" width="1025" height="29" rx="8" fill="#d5f0e0"/>
+  <text class="small" x="95" y="546">IdempotencyRecord được lưu cùng transaction · cùng key + payload trả Order cũ · cùng key + payload khác → 409</text>
+  <path class="line" d="M980 305V370H600V375"/>
+
+  <text class="phase" x="55" y="625">03  TÁCH NHÁNH THANH TOÁN</text>
+  <rect class="box" x="55" y="648" width="505" height="289" fill="#fff" stroke="#a9d9e8" filter="url(#shadow)"/>
+  <rect x="75" y="666" width="78" height="27" rx="13" fill="#d8f0f7"/><text class="tag" x="96" y="685" fill="#087f99">COD</text>
+  <text class="head" x="76" y="728">FE → trang đặt hàng thành công</text>
+  <text class="body" x="76" y="758">BE trả Order đã lưu; FE cập nhật giỏ hàng.</text>
+  <text class="body" x="76" y="787">Tiền vẫn UNPAID, chưa coi là đã thu.</text>
+  <path d="M76 812H536" stroke="#c8e4eb"/>
+  <text class="head" x="76" y="846">Chờ Admin xác nhận</text>
+  <text class="body" x="76" y="875">Không cần IPN hay cổng thanh toán.</text>
+  <text class="small" x="76" y="905">COD là paymentMethod = money trong BE.</text>
+
+  <rect class="box" x="610" y="648" width="535" height="289" fill="#fff" stroke="#d9c3e8" filter="url(#shadow)"/>
+  <rect x="630" y="666" width="93" height="27" rx="13" fill="#f1e7f7"/><text class="tag" x="646" y="685" fill="#8758a6">VNPAY</text>
+  <text class="head" x="631" y="728">BE dựng payment URL sau commit</text>
+  <text class="body" x="631" y="758">FE redirect người mua tới VNPay.</text>
+  <text class="body" x="631" y="787">Return URL → FE /payment/result hỏi BE.</text>
+  <path d="M631 812H1123" stroke="#e7d9ef"/>
+  <text class="head" x="631" y="846">GET /client/order/vnpay/ipn</text>
+  <text class="body" x="631" y="875">BE xác minh chữ ký, merchant, tiền, attempt.</text>
+  <text class="small" x="631" y="905">IPN / QueryDR xác nhận → paymentStatus = PAID.</text>
+  <path class="line" d="M450 571V608H500V640"/><path class="line" d="M750 571V608H1080V640"/>
+
+  <text class="phase" x="55" y="996">04  XÁC NHẬN VÀ GIAO HÀNG</text>
+  <rect class="box" x="55" y="1019" width="330" height="177" fill="#fff" stroke="#b8dce8" filter="url(#shadow)"/>
+  <circle cx="84" cy="1048" r="17" fill="#087f99"/><text class="number" x="79" y="1054">5</text>
+  <text class="head" x="112" y="1055">Admin xác nhận</text>
+  <text class="body" x="77" y="1087">VNPay phải PAID; COD được</text>
+  <text class="body" x="77" y="1112">xác nhận khi còn giữ hàng.</text>
+  <text class="body" x="77" y="1137">Không có payment review.</text>
+  <text class="small" x="77" y="1173">Order → PENDING_PICKUP</text>
+  <rect class="box" x="435" y="1019" width="330" height="177" fill="#fff" stroke="#b8dce8" filter="url(#shadow)"/>
+  <circle cx="464" cy="1048" r="17" fill="#087f99"/><text class="number" x="459" y="1054">6</text>
+  <text class="head" x="492" y="1055">Worker GHN</text>
+  <text class="body" x="457" y="1087">Claim đơn đủ điều kiện.</text>
+  <text class="body" x="457" y="1112">Gọi create-order ngoài DB tx.</text>
+  <text class="body" x="457" y="1137">Retry cùng client_order_code.</text>
+  <text class="small" x="457" y="1173">shippingStatus → CREATED</text>
+  <rect class="box" x="815" y="1019" width="330" height="177" fill="#fff" stroke="#b8dce8" filter="url(#shadow)"/>
+  <circle cx="844" cy="1048" r="17" fill="#087f99"/><text class="number" x="839" y="1054">7</text>
+  <text class="head" x="872" y="1055">GHN cập nhật trạng thái</text>
+  <text class="body" x="837" y="1087">POST /client/shipping/webhook/ghn.</text>
+  <text class="body" x="837" y="1112">BE xác thực secret; bỏ event cũ.</text>
+  <text class="body" x="837" y="1137">Giao thành công → DELIVERED.</text>
+  <text class="small" x="837" y="1173">Tạo label ≠ đã giao cho GHN.</text>
+  <path class="line" d="M500 937V977H350V1011"/><path class="line" d="M1080 937V977H350V1011"/><path class="line" d="M385 1105H427"/><path class="line" d="M765 1105H807"/>
+
+  <text class="phase" x="55" y="1252">05  NGOẠI LỆ VÀ KHÔI PHỤC</text>
+  <rect class="box" x="55" y="1274" width="330" height="203" fill="#fff8f4" stroke="#efc6b0"/>
+  <text class="head" x="76" y="1308">Mất phản hồi checkout</text>
+  <text class="body" x="76" y="1341">FE giữ key + payload trong session.</text>
+  <text class="body" x="76" y="1367">Gửi lại để lấy đúng Order đã tạo.</text>
+  <text class="head" x="76" y="1410">Hủy đơn trước xác nhận</text>
+  <text class="body" x="76" y="1440">Nhả stock và lượt coupon một lần.</text>
+  <rect class="box" x="435" y="1274" width="330" height="203" fill="#fff8f4" stroke="#efc6b0"/>
+  <text class="head" x="456" y="1308">VNPay chưa rõ kết quả</text>
+  <text class="body" x="456" y="1341">QueryDR đối soát khi thiếu IPN.</text>
+  <text class="body" x="456" y="1367">FE polling trạng thái từ BE.</text>
+  <text class="head" x="456" y="1410">Thất bại đã xác minh</text>
+  <text class="body" x="456" y="1440">Còn hạn: attempt mới, cùng Order.</text>
+  <rect class="box" x="815" y="1274" width="330" height="203" fill="#fff8f4" stroke="#efc6b0"/>
+  <text class="head" x="836" y="1308">Hết hạn / tiền về muộn</text>
+  <text class="body" x="836" y="1341">Worker hết hạn hủy đơn, nhả hàng</text>
+  <text class="body" x="836" y="1367">sau thời gian xác minh.</text>
+  <text class="body" x="836" y="1409">Tiền về sau hủy → payment review.</text>
+  <text class="body" x="836" y="1440">Không tự mở lại đơn hay tạo GHN.</text>
+  <text class="small" x="55" y="1540">Order.status, paymentStatus và shippingStatus là ba trục trạng thái riêng. Sơ đồ lược bớt chi tiết kỹ thuật của từng transaction.</text>
+  <text class="small" x="55" y="1570">Nguồn: Linh_FE checkout/payment; Linh_BE orders/payments/shipping · cập nhật 29/10/2026</text>
+</svg>

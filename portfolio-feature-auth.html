@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đăng ký &amp; đăng nhập | TeddyPet</title>
+  <meta name="description" content="Luồng đăng ký và đăng nhập Client của TeddyPet, bao gồm OAuth Google và Facebook." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/project-base.css" />
+  <link rel="stylesheet" href="css/project.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><a href="teddypet-auth.html">Authentication & Sessions</a><span>/</span><span>Sign-up & sign-in</span></div>
+    <div class="eyebrow">TEDDYPET · CLIENT IDENTITY</div>
+    <h1 style="margin-top:20px">Đăng ký & đăng nhập</h1>
+    <p class="lead">Một luồng xác thực Client dùng chung cho đăng nhập thông thường và OAuth Google/Facebook. Backend quản lý danh tính và phiên; tài khoản quản trị không thể đăng nhập qua OAuth khách hàng.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap project-case-study">
+<div class="note-box" style="margin-bottom:40px">Detailed note, written in Vietnamese. The English case study is the summary of this page. <a href="teddypet-auth.html" style="color:var(--accent)">Authentication & Sessions →</a> · <a href="vi/teddypet-auth.html" style="color:var(--accent)">Xác thực & Phiên đăng nhập →</a></div>
+
+    
+    
+
+    <section class="project-case-block auth-feature-summary">
+      <span class="project-section-index">MỤC TIÊU & QUYẾT ĐỊNH</span>
+      <h2>Nhà cung cấp xác thực danh tính; TeddyPet cấp phiên ứng dụng.</h2>
+      <p>Khách hàng có thể đăng ký/đăng nhập bằng email và mật khẩu hoặc dùng Google/Facebook. BE xác thực tài khoản và quản lý phiên; Redis giới hạn lạm dụng ở các luồng xác thực, còn FE chỉ giữ access token trong bộ nhớ.</p>
+    </section>
+
+    <section class="project-query-section auth-feature-flow-section">
+      <div class="project-section-heading"><span class="project-section-index">ĐĂNG KÝ & ĐĂNG NHẬP THÔNG THƯỜNG</span><h2>Tạo tài khoản trước, sau đó đăng nhập để mở phiên.</h2><p>Đăng ký thành công chưa tự đăng nhập. Lần đăng nhập tiếp theo xác thực mật khẩu và loại tài khoản ở BE.</p></div>
+      <figure class="auth-feature-flow-figure">
+        <a class="auth-feature-diagram-link" href="img/portfolio/features/authentication/password-auth-flow.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ đăng ký và đăng nhập đầy đủ">
+          <img src="img/portfolio/features/authentication/password-auth-flow.svg" alt="Sơ đồ đăng ký và đăng nhập thường của Client: FE gửi biểu mẫu, BE kiểm tra và tạo tài khoản, xác thực mật khẩu, cấp phiên với refresh cookie HttpOnly và hỗ trợ refresh hoặc đăng xuất." width="1440" height="1320" />
+        </a>
+        <figcaption>Mật khẩu được băm ở BE; refresh token nằm trong cookie HttpOnly và chỉ lưu hash trong DB. Bấm sơ đồ để mở kích thước đầy đủ.</figcaption>
+      </figure>
+      <div class="auth-feature-outcomes">
+        <article><strong>Đăng ký</strong><span>BE kiểm tra dữ liệu, chống lạm dụng, kiểm tra email trùng, băm mật khẩu và tạo tài khoản Client. FE chuyển khách sang trang đăng nhập.</span></article>
+        <article><strong>Đăng nhập</strong><span>BE kiểm tra mật khẩu và accountType; MFA chỉ dành cho tài khoản quản trị. Client được cấp phiên đăng nhập theo thiết bị.</span></article>
+      </div>
+    </section>
+
+    <section class="project-query-section auth-feature-flow-section">
+      <div class="project-section-heading"><span class="project-section-index">KIẾN TRÚC PHIÊN & GIỚI HẠN LẠM DỤNG</span><h2>Redis bảo vệ xác thực; database quản lý phiên.</h2><p>Mỗi lần đăng nhập tạo một phiên riêng trong database; đây là phiên trình duyệt, không phải định danh phần cứng của máy.</p></div>
+      <figure class="auth-feature-flow-figure">
+        <a class="auth-feature-diagram-link" href="img/portfolio/features/authentication/auth-session-security-architecture.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ kiến trúc phiên, Redis rate limiting và bảo vệ token">
+          <img src="img/portfolio/features/authentication/auth-session-security-architecture.svg" alt="Sơ đồ kiến trúc xác thực: Redis giới hạn đăng ký, đăng nhập, quên mật khẩu và chống phát lại TOTP cho quản trị; PostgreSQL lưu user, device và hash refresh token; FE giữ access JWT trong bộ nhớ, browser giữ refresh JWT bằng cookie HttpOnly." width="1520" height="1120" />
+        </a>
+        <figcaption>JWT được ký để kiểm tra tính toàn vẹn, không được mã hóa để che payload. Refresh token thô không được lưu trong database; Redis không lưu phiên đăng nhập. Bấm sơ đồ để mở kích thước đầy đủ.</figcaption>
+      </figure>
+      <div class="auth-feature-outcomes">
+        <article><strong>Redis · giới hạn xác thực</strong><span>Đếm yêu cầu đăng ký, lần đăng nhập thất bại, yêu cầu khôi phục mật khẩu và mã TOTP quản trị đã dùng; các khóa có thời hạn. Khi bị giới hạn, API trả Retry-After theo thời gian quota còn lại.</span></article>
+        <article><strong>PostgreSQL · phiên đăng nhập</strong><span>Lưu thiết bị và hash SHA-256 của refresh token để kiểm tra, xoay vòng và thu hồi phiên.</span></article>
+      </div>
+    </section>
+
+    <section class="project-query-section auth-feature-flow-section">
+      <div class="project-section-heading"><span class="project-section-index">NHÁNH LỖI & PHỤC HỒI</span><h2>Hạn chế request, lỗi xác thực và refresh bị từ chối.</h2><p>Sơ đồ thể hiện cách BE fail-closed khi Redis lỗi, rollback nếu DB không tạo được phiên và cách FE kết thúc phiên hết hạn.</p></div>
+      <figure class="auth-feature-flow-figure">
+        <a class="auth-feature-diagram-link" href="img/portfolio/features/authentication/auth-exception-and-recovery-flow.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ nhánh lỗi và phục hồi đăng nhập">
+          <img src="img/portfolio/features/authentication/auth-exception-and-recovery-flow.svg" alt="Sơ đồ lỗi xác thực: Redis giới hạn request và trả 429 khi vượt quota, trả 503 fail-closed khi Redis lỗi; sai thông tin trả 401, sai loại tài khoản trả 403, email trùng trả 409; refresh hết hạn xóa phiên, refresh token bị phát lại thu hồi device session." width="1520" height="1330" />
+        </a>
+        <figcaption>Refresh đồng thời có thể khiến token cũ bị phát lại; FE dùng Web Locks để giảm race trong cùng browser, còn BE dùng transaction để chỉ cho một lần xoay token thành công.</figcaption>
+      </figure>
+    </section>
+
+    <section class="project-query-section auth-feature-flow-section">
+      <div class="project-section-heading"><span class="project-section-index">VÒNG ĐỜI PHIÊN</span><h2>Refresh token được xoay; phiên có thể thu hồi và dọn dẹp.</h2><p>Sơ đồ phân biệt vòng đời của một phiên trình duyệt với vòng đời của từng refresh token.</p></div>
+      <figure class="auth-feature-flow-figure">
+        <a class="auth-feature-diagram-link" href="img/portfolio/features/authentication/auth-session-lifecycle.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ vòng đời phiên đăng nhập Client">
+          <img src="img/portfolio/features/authentication/auth-session-lifecycle.svg" alt="Sơ đồ vòng đời phiên: đăng nhập tạo phiên trong database, refresh xoay token trong transaction, đăng xuất hoặc phát hiện token bị dùng lại sẽ thu hồi phiên, cron đánh dấu phiên hết hạn." width="1360" height="760" />
+        </a>
+        <figcaption>Refresh hợp lệ giữ phiên hoạt động nhưng thay token; refresh token bị phát lại sẽ thu hồi phiên trình duyệt đó. Bấm sơ đồ để mở kích thước đầy đủ.</figcaption>
+      </figure>
+    </section>
+
+    <section class="project-query-section auth-feature-flow-section">
+      <div class="project-section-heading"><span class="project-section-index">LUỒNG OAUTH</span><h2>Từ nút đăng nhập đến phiên Client.</h2><p>Hai nhà cung cấp dùng chung bước tạo tài khoản/liên kết và cấp phiên ở Backend. Đây là chuyển hướng trình duyệt và callback OAuth, không phải webhook.</p></div>
+      <figure class="auth-feature-flow-figure">
+        <a class="auth-feature-diagram-link" href="img/portfolio/features/authentication/oauth-login-sequence.png" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ đăng nhập OAuth ở độ phân giải đầy đủ">
+          <img src="img/portfolio/features/authentication/oauth-login-sequence.png" alt="Sơ đồ tuần tự đăng nhập Google hoặc Facebook: FE chuyển đến BE, BE xác thực OAuth callback, liên kết hoặc tạo Client, đặt refresh cookie và FE hoàn tất phiên." width="3974" height="2514" />
+        </a>
+        <figcaption>State ràng buộc callback với yêu cầu đăng nhập đã bắt đầu; cookie refresh được giới hạn cho phiên Client. Bấm sơ đồ để mở ảnh độ phân giải đầy đủ.</figcaption>
+      </figure>
+      <div class="auth-feature-outcomes">
+        <article><strong>Đăng nhập thành công</strong><span>BE xác minh danh tính, tạo hoặc liên kết Client và phát hành phiên.</span></article>
+        <article><strong>Callback không hợp lệ</strong><span>State sai, người dùng hủy hoặc tài khoản không được phép: không cấp phiên; FE hiển thị lỗi phù hợp.</span></article>
+        <article><strong>Không phải webhook</strong><span>Provider chuyển trình duyệt về callback với code và state. Callback lỗi hoặc không hoàn tất thì khách hàng bắt đầu đăng nhập lại; không cần hàng đợi retry webhook.</span></article>
+      </div>
+    </section>
+
+    <section class="project-query-section auth-feature-flow-section">
+      <div class="project-section-heading"><span class="project-section-index">KHÔI PHỤC MẬT KHẨU CLIENT</span><h2>OTP xác minh email; reset token ngắn hạn thu hồi phiên cũ.</h2><p>Request, verify và confirm là ba bước riêng. BE không tiết lộ email có khớp tài khoản hay không.</p></div>
+      <figure class="auth-feature-flow-figure">
+        <a class="auth-feature-diagram-link" href="img/portfolio/features/authentication/password-reset-flow.svg" target="_blank" rel="noopener noreferrer" aria-label="Mở sơ đồ khôi phục mật khẩu Client đầy đủ">
+          <img src="img/portfolio/features/authentication/password-reset-flow.svg" alt="Sơ đồ khôi phục mật khẩu Client: yêu cầu mã OTP với phản hồi chung, xác minh tối đa năm lần, cấp reset token một lần có thời hạn, cập nhật mật khẩu trong transaction và thu hồi mọi phiên cũ." width="1520" height="1320" />
+        </a>
+        <figcaption>OTP có hiệu lực 5 phút, reset token 10 phút. DB chỉ lưu hash reset token; đổi mật khẩu thành công sẽ thu hồi các phiên đang hoạt động.</figcaption>
+      </figure>
+      <div class="auth-feature-outcomes">
+        <article><strong>OTP dùng một lần</strong><span>Challenge được lưu trong DB; mã sai tối đa 5 lần, hết hạn hoặc đã xác minh thì không cấp token.</span></article>
+        <article><strong>Phiên cũ bị thu hồi</strong><span>Đổi mật khẩu và thu hồi refresh token/thiết bị diễn ra trong cùng transaction.</span></article>
+        <article><strong>Admin tách riêng</strong><span>Admin dùng endpoint khôi phục riêng; chính sách MFA quản trị chỉ áp dụng ở bước xác minh OTP.</span></article>
+      </div>
+    </section>
+
+    <section class="project-query-section auth-feature-support-section">
+      <div class="project-section-heading"><span class="project-section-index">DUY TRÌ PHIÊN</span><h2>Các thao tác sau khi đăng nhập.</h2></div>
+      <div class="project-query-grid">
+        <article><h3><span>01</span> Làm mới phiên</h3><p>Khi API trả 401, Axios interceptor gọi endpoint refresh bằng cookie, BE xoay refresh token và FE cập nhật access token.</p></article>
+        <article><h3><span>02</span> Đăng xuất</h3><p>FE gọi logout; BE thu hồi phiên thiết bị và xóa refresh cookie. FE xóa trạng thái đăng nhập cục bộ.</p></article>
+      </div>
+    </section>
+
+    <details class="project-auth-files auth-feature-files">
+      <summary>Các file chính theo luồng BE và FE</summary>
+      <div class="project-auth-files-grid">
+        <div><strong>Backend · NestJS</strong><ul>
+          <li><code>auth.controller.ts</code> — route đăng ký, đăng nhập, refresh, logout và OAuth callback</li>
+          <li><code>auth.dto.ts</code> — quy tắc kiểm tra dữ liệu đăng ký/đăng nhập</li>
+          <li><code>auth.service.ts</code> — xác thực, cấp/luân chuyển phiên và dọn phiên hết hạn định kỳ</li>
+          <li><code>auth.repo.ts</code> — transaction tạo/đổi phiên, lưu tài khoản, thiết bị và refresh-token hash</li>
+          <li><code>auth-abuse-protection.service.ts</code> — quota Redis nguyên tử, fail-closed và chống phát lại TOTP quản trị</li>
+          <li><code>auth.module.ts</code> — đăng ký controller và các service xác thực</li>
+          <li><code>identity.prisma</code>, <code>.env.example</code> — mô hình thiết bị/refresh token và cấu hình ngưỡng xác thực</li>
+          <li><code>jwt.strategy.ts</code>, <code>jwt-auth.guard.ts</code> — xác minh access token cho route cần phiên</li>
+          <li><code>forgot-passwords.dto.ts</code>, <code>forgot-passwords.service.ts</code>, <code>forgot-passwords.repo.ts</code> — khôi phục mật khẩu qua OTP</li>
+          <li><code>google-oauth.service.ts</code>, <code>facebook-oauth.service.ts</code> — giao tiếp với nhà cung cấp OAuth</li>
+        </ul></div>
+        <div><strong>Frontend · Next.js</strong><ul>
+          <li><code>auth/register/page.tsx</code>, <code>auth/login/page.tsx</code> — route hiển thị trang đăng ký/đăng nhập</li>
+          <li><code>Register.tsx</code>, <code>Login.tsx</code> — biểu mẫu, kiểm tra dữ liệu và điều hướng</li>
+          <li><code>auth.api.ts</code>, <code>api-contracts/generated.ts</code> — gọi API và dùng kiểu request từ OpenAPI</li>
+          <li><code>api-version.ts</code>, <code>api/index.ts</code> — tạo endpoint, gửi Bearer token và tự refresh phiên</li>
+          <li><code>useAuthStore.ts</code> — access token trong bộ nhớ, thông tin hiển thị được lưu riêng</li>
+          <li><code>auth/oauth/callback/page.tsx</code>, <code>OAuthCallback.tsx</code> — hoàn tất phiên sau khi Google/Facebook chuyển về FE</li>
+          <li><code>ForgotPassword.tsx</code>, <code>OTPPassword.tsx</code>, <code>ResetPassword.tsx</code> — các màn hình khôi phục tài khoản</li>
+        </ul></div>
+      </div>
+    </details>
+
+    <div class="project-interview-note"><span class="project-section-index">ĐIỂM THIẾT KẾ</span><p>“BE là nguồn xác thực và quản lý vòng đời phiên. FE điều phối biểu mẫu, giữ access token trong bộ nhớ và dùng refresh cookie HttpOnly để duy trì phiên Client.”</p></div>
+    <p class="layout-overview-return"><a href="portfolio-client.html">← Quay về tổng quan tính năng Client</a></p>
+    <div class="project-footer-tags"><span>OAuth 2.0</span><span>Google</span><span>Facebook</span><span>HttpOnly Cookie</span><span>Client Authentication</span></div>
+  
+  <div style="margin-top:50px"><a class="btn btn-dark" href="teddypet-auth.html">← Authentication & Sessions</a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1520 1330" role="img" aria-labelledby="title desc">
+  <title id="title">Các nhánh lỗi và phục hồi của luồng xác thực</title>
+  <desc id="desc">Sơ đồ mô tả request xác thực qua Redis trước khi xử lý, các lỗi 429, 503, 401, 403, 409, transaction cấp phiên và cách refresh token hết hạn hoặc bị phát lại dẫn tới thu hồi phiên.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fbfc"/><stop offset="1" stop-color="#fff"/></linearGradient>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#18879a"/></marker>
+    <marker id="arr-red" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#d66c68"/></marker>
+    <marker id="arr-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#c18a31"/></marker>
+    <style>
+      text{font-family:Arial,sans-serif}.title{font-size:28px;font-weight:700;fill:#173542}.sub{font-size:15px;fill:#687b84}.section{font-size:12px;font-weight:700;letter-spacing:.1em;fill:#178194}.head{font-size:16px;font-weight:700;fill:#173542}.body{font-size:13px;fill:#405964}.small{font-size:12px;fill:#687b84}.mono{font:12px Consolas,monospace;fill:#355665}.box{fill:#fff;stroke:#dce7eb;stroke-width:1.4}.blue{fill:#eff8fa;stroke:#b8dfe5}.redis{fill:#fff6f1;stroke:#efcabb}.red{fill:#fff3f1;stroke:#edc2bd}.amber{fill:#fff9ed;stroke:#efdfbd}.green{fill:#f2f8f2;stroke:#c8dfc7}.line{fill:none;stroke:#18879a;stroke-width:2.2;marker-end:url(#arr)}.line-red{fill:none;stroke:#d66c68;stroke-width:2.1;marker-end:url(#arr-red)}.line-amber{fill:none;stroke:#c18a31;stroke-width:2.1;marker-end:url(#arr-amber)}.dash{fill:none;stroke:#18879a;stroke-width:1.9;stroke-dasharray:7 6;marker-end:url(#arr)}
+    </style>
+  </defs>
+  <rect x="1" y="1" width="1518" height="1328" rx="22" fill="url(#bg)" stroke="#e5edf0"/>
+  <text x="48" y="54" class="title">Xác thực · Nhánh lỗi và phục hồi phiên</text>
+  <text x="48" y="82" class="sub">Các lỗi được xử lý tại ranh giới tương ứng; không cấp một phiên nửa vời.</text>
+
+  <text x="48" y="128" class="section">1 · ADMISSION CONTROL QUA REDIS</text>
+  <rect x="48" y="148" width="260" height="98" rx="14" class="box blue"/>
+  <text x="72" y="181" class="head">FE gửi yêu cầu</text><text x="72" y="207" class="small">Đăng ký · đăng nhập · khôi phục</text>
+  <rect x="372" y="148" width="398" height="98" rx="14" class="box redis"/>
+  <text x="396" y="181" class="head">Redis kiểm tra quota atomically</text><text x="396" y="207" class="small">Lua check + increment + TTL trước nghiệp vụ</text>
+  <path d="M308 197H364" class="line"/>
+  <rect x="844" y="136" width="286" height="82" rx="14" class="box amber"/>
+  <text x="868" y="169" class="head">Ngưỡng đã vượt</text><text x="868" y="194" class="small">429 + Retry-After từ TTL quota</text>
+  <path d="M770 174H836" class="line-amber"/><text x="783" y="159" class="small">deny</text>
+  <rect x="844" y="230" width="286" height="82" rx="14" class="box red"/>
+  <text x="868" y="263" class="head">Redis không khả dụng</text><text x="868" y="288" class="small">Fail-closed · 503 · không bỏ qua quota</text>
+  <path d="M770 220C800 220 804 271 836 271" class="line-red"/><text x="783" y="247" class="small">error</text>
+  <rect x="1200" y="148" width="272" height="98" rx="14" class="box green"/>
+  <text x="1224" y="181" class="head">Được phép tiếp tục</text><text x="1224" y="207" class="small">BE chạy validation / xác thực</text>
+  <path d="M1130 177H1192" class="line"/><text x="1140" y="162" class="small">allow</text>
+  <text x="48" y="285" class="small">Redis áp dụng quota IP/email cho đăng ký, đăng nhập, yêu cầu quên mật khẩu; TOTP quản trị dùng Redis để chặn mã đã dùng lại.</text>
+  <text x="48" y="308" class="small">OTP khôi phục mật khẩu có tối đa 5 lần thử mỗi challenge; số lần thử được cập nhật có điều kiện trong database.</text>
+
+  <text x="48" y="360" class="section">2 · KẾT QUẢ NGHIỆP VỤ</text>
+  <rect x="48" y="382" width="430" height="236" rx="16" class="box"/>
+  <text x="74" y="418" class="head">Đăng ký</text>
+  <rect x="74" y="440" width="378" height="62" rx="11" class="box red"/>
+  <text x="96" y="466" class="body" font-weight="700">Email đã tồn tại → 409 Conflict</text><text x="96" y="487" class="small">Không tạo bản ghi Client trùng.</text>
+  <rect x="74" y="518" width="378" height="74" rx="11" class="box green"/>
+  <text x="96" y="546" class="body" font-weight="700">Hợp lệ → bcrypt → tạo Client trong DB</text><text x="96" y="570" class="small">201 Created · chưa tự đăng nhập.</text>
+
+  <rect x="516" y="382" width="430" height="236" rx="16" class="box"/>
+  <text x="542" y="418" class="head">Đăng nhập</text>
+  <rect x="542" y="440" width="378" height="62" rx="11" class="box red"/>
+  <text x="564" y="466" class="body" font-weight="700">Sai thông tin đăng nhập → 401</text><text x="564" y="487" class="small">Ghi bộ đếm thất bại có giới hạn.</text>
+  <rect x="542" y="518" width="378" height="74" rx="11" class="box amber"/>
+  <text x="564" y="546" class="body" font-weight="700">Đăng nhập sai mode tài khoản → 403</text><text x="564" y="570" class="small">Không tạo phiên cho mode không phù hợp.</text>
+
+  <rect x="984" y="382" width="488" height="236" rx="16" class="box green"/>
+  <text x="1010" y="418" class="head">Đăng nhập thành công</text>
+  <text x="1010" y="453" class="body">Một transaction: thu hồi phiên cũ từ cookie hiện tại</text>
+  <text x="1010" y="478" class="body">+ tạo Device mới + lưu hash refresh token.</text>
+  <text x="1010" y="517" class="small">DB lỗi → transaction rollback, không gửi token/cookie mới.</text>
+  <text x="1010" y="548" class="small">BE trả access token; đặt refresh cookie HttpOnly.</text>
+  <text x="1010" y="579" class="small">FE giữ access trong memory; trình duyệt giữ refresh cookie.</text>
+
+  <text x="48" y="684" class="section">3 · ACCESS TOKEN HẾT HẠN → REFRESH / RECOVERY</text>
+  <rect x="48" y="708" width="260" height="106" rx="14" class="box blue"/>
+  <text x="72" y="745" class="head">API trả 401</text><text x="72" y="773" class="small">FE interceptor thử refresh một lần</text>
+  <rect x="372" y="708" width="330" height="106" rx="14" class="box blue"/>
+  <text x="396" y="745" class="head">Browser gửi cookie tự động</text><text x="396" y="773" class="mono">POST /auth/client/refresh</text>
+  <path d="M308 761H364" class="line"/>
+  <rect x="766" y="708" width="370" height="106" rx="14" class="box"/>
+  <text x="790" y="745" class="head">BE kiểm chữ ký + hash DB + Device</text><text x="790" y="773" class="small">Xác minh mode, expiry, trạng thái và session age</text>
+  <path d="M702 761H758" class="line"/>
+  <rect x="1200" y="696" width="272" height="94" rx="14" class="box green"/>
+  <text x="1224" y="731" class="head">Token còn hợp lệ</text><text x="1224" y="758" class="small">Transaction rotate · Set-Cookie mới</text>
+  <path d="M1136 747H1192" class="line"/>
+  <rect x="1200" y="802" width="272" height="94" rx="14" class="box red"/>
+  <text x="1224" y="837" class="head">Hết hạn / bị thu hồi</text><text x="1224" y="864" class="small">401 · xóa cookie · FE đăng xuất</text>
+  <path d="M1136 777C1166 777 1166 849 1192 849" class="line-red"/>
+
+  <rect x="48" y="850" width="1088" height="94" rx="14" class="box red"/>
+  <text x="74" y="885" class="head">Refresh token đã dùng lại / refresh đua nhau</text>
+  <text x="74" y="914" class="small">Transaction chỉ cho một lần rotate thắng; phát hiện token cũ bị phát lại → thu hồi toàn bộ phiên của Device và yêu cầu đăng nhập lại.</text>
+  <path d="M950 814V842" class="line-red"/>
+
+  <rect x="48" y="982" width="1424" height="258" rx="18" class="box"/>
+  <text x="78" y="1024" class="section">4 · ĐIỀU FE CẦN LÀM Ở MỖI NHÁNH</text>
+  <rect x="78" y="1050" width="420" height="148" rx="13" class="box blue"/>
+  <text x="102" y="1084" class="head">429 · giới hạn đã chạm</text><text x="102" y="1112" class="small">Giữ form/dữ liệu, báo thử lại sau;</text><text x="102" y="1135" class="small">không lặp request tự động.</text>
+  <rect x="528" y="1050" width="420" height="148" rx="13" class="box amber"/>
+  <text x="552" y="1084" class="head">503 · Redis tạm gián đoạn</text><text x="552" y="1112" class="small">Thông báo dịch vụ xác thực tạm lỗi;</text><text x="552" y="1135" class="small">không báo sai mật khẩu.</text>
+  <rect x="978" y="1050" width="464" height="148" rx="13" class="box red"/>
+  <text x="1002" y="1084" class="head">401 khi refresh thất bại</text><text x="1002" y="1112" class="small">Xóa token/state cục bộ và chuyển về đăng nhập;</text><text x="1002" y="1135" class="small">không retry API gốc vô hạn.</text>
+  <text x="78" y="1220" class="small">FE dùng Web Locks để gộp refresh đồng thời trong cùng browser khi trình duyệt hỗ trợ; khóa này giảm race, không thay thế transaction của BE.</text>
+</svg>

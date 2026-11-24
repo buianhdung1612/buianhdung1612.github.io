@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat hỗ trợ thời gian thực | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="Dịch vụ chat khách và nhân viên tách riêng, gửi tin idempotent, thứ tự tin nhắn ổn định và replica đặt sau Nginx." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../teddypet-chat.html" />
+  <link rel="alternate" hreflang="vi" href="teddypet-chat.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../teddypet-chat.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><a href="projects.html">Dự án</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Chat hỗ trợ thời gian thực</span></div>
+    <div class="eyebrow">TEDDYPET · CHAT HỖ TRỢ THỜI GIAN THỰC</div>
+    <h1 style="margin-top:20px">Chat vẫn <span class="outline">đứng vững</span> khi mất kết nối</h1>
+    <p class="lead">Dịch vụ chat khách và nhân viên tách riêng, gửi tin idempotent, thứ tự tin nhắn ổn định và replica đặt sau Nginx.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · COVERED BY TESTS (2026-11-15)</span><span class="pill">Socket.IO</span><span class="pill">Redis</span><span class="pill">Outbox</span><span class="pill">NestJS</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Vấn đề</small><p>Socket rớt, tab retry và instance khởi động lại, nhưng không được mất, trùng hay đảo thứ tự tin nhắn.</p></div><div class="tldr-card"><small>Cách giải</small><p>Commit database trước khi ACK, client message id duy nhất, số thứ tự theo từng cuộc hội thoại, transactional outbox và Redis fan-out.</p></div><div class="tldr-card"><small>Bằng chứng</small><p>Unit spec cùng hai integration spec: module Nest với PostgreSQL, và hai replica Socket.IO qua Redis.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Vấn đề</div><div class="cs-body"><p class="lead">Chat hỗ trợ nghe đơn giản cho đến khi mạng trục trặc. Khách trên di động mất sóng giữa chừng, trình duyệt retry, một instance khởi động lại, và nhân viên phải mất quyền ngay khi phiên bị thu hồi. Thiết kế ngây thơ sẽ trùng tin, đảo thứ tự, hoặc báo đã nhận một tin chưa hề vào database.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Ràng buộc</div><div class="cs-body"><ul class="rule-list"><li>Tin nhắn chỉ được ACK sau khi đã commit vào database.</li><li>Gửi cùng một tin hai lần không được tạo hai dòng.</li><li>Client bỏ lỡ sự kiện phải bắt kịp được theo cách xác định.</li><li>Chat phải tách khỏi dữ liệu thương mại và dùng database riêng.</li><li>Phần AI hỗ trợ không được nhận dữ liệu cá nhân thô.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Thiết kế</div><div class="cs-body"><ol class="design-steps"><li><h4>Dịch vụ và database riêng</h4><p>Core sở hữu danh tính. Chat xác minh JWT 5 phút do Core cấp (audience <code>chat-service</code>), các scope — <code>chat:self</code>, <code>chat:reply</code>, <code>chat:read_all</code>, <code>chat:assign</code> — được kiểm trong service. Chat không bao giờ kết nối tới database của Core.</p></li><li><h4>Commit trước, ACK sau</h4><p>Commit database đến trước khi ACK thành công. <code>(senderId, clientMessageId)</code> là duy nhất nên việc gửi idempotent. <code>seq</code> sắp xếp tin theo từng cuộc hội thoại và <code>changeVersion</code> sắp xếp các lần sửa.</p></li><li><h4>Socket chỉ là nỗ lực tốt nhất</h4><p>Push real-time không phải nguồn sự thật. Client bắt kịp bằng <code>afterSeq</code> và <code>changedAfter</code>, nên bỏ lỡ một sự kiện chỉ tốn một request, không mất dữ liệu.</p></li><li><h4>Transactional outbox</h4><p>Tác vụ phụ được đưa vào hàng đợi trong cùng transaction với tin nhắn bởi outbox service, và các handler đều idempotent.</p></li><li><h4>Mở rộng ngang</h4><p>File compose chạy hai replica sau Nginx. Redis adapter fan-out sự kiện Socket.IO; Redis còn dùng cho rate limit, bộ đếm spam và presence, không bao giờ là nguồn sự thật.</p></li><li><h4>Điều phối nhân viên và an toàn</h4><p>Cuộc hội thoại tự gán cho nhân viên đang online, spam kích hoạt khoá tự động, job lưu trữ 10 ngày xoá dữ liệu cũ, tệp đính kèm được kiểm tra magic byte và tải qua link ký HMAC. Core thu hồi được phiên trong chat ngay lập tức.</p></li><li><h4>AI hỗ trợ có che dữ liệu</h4><p>Gợi ý trả lời, viết lại, tóm tắt và phân tích cảm xúc dùng Claude API sau khi dữ liệu cá nhân được che bởi <code>redact()</code>. Khách không bao giờ thấy giá trị cảm xúc.</p></li><li><h4>Vận hành</h4><p>Log JSON một dòng mang correlation id, metric Prometheus dùng nhãn có số lượng giá trị thấp.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Bằng chứng trong code</div><div class="cs-body"><ul class="evi-list"><li><code>chat-service/src/chat.service.ts</code><span>Quy tắc nghiệp vụ, phân quyền, idempotency, thứ tự, khoá</span></li><li><code>chat-service/src/chat.gateway.ts</code><span>Namespace Socket.IO /chat: gửi, đã đọc, typing, presence</span></li><li><code>chat-service/src/outbox.service.ts</code><span>Worker transactional outbox</span></li><li><code>chat-service/src/redis-io.adapter.ts</code><span>Fan-out giữa các replica</span></li><li><code>chat-service/src/session-revocation.service.ts</code><span>Thu hồi phiên ngay từ Core</span></li><li><code>chat-service/src/ai/redact.ts</code><span>Che dữ liệu cá nhân trước khi gọi AI</span></li><li><code>chat-service/compose.yaml</code><span>Hai replica sau Nginx, volume đính kèm dùng chung</span></li><li><code>.github/workflows/chat-service.yml</code><span>Workflow CI</span></li></ul><p class="src-note">Đường dẫn tính từ thư mục gốc của repo TeddyPet.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Kiểm chứng</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> Đã thể hiện</h4><ul><li>Tin nhắn văn bản và tệp đính kèm, lịch sử cuộn vô hạn, push presence, typing và số tin chưa đọc theo từng cuộc hội thoại.</li><li>Tự gán nhân viên kèm lịch sử, trạng thái mở / đóng / khoá và khoá spam tự động, đánh giá.</li><li>Xoá tin nhắn và cuộc hội thoại kèm dọn tệp, cùng job lưu trữ 10 ngày.</li><li>Gợi ý AI, viết lại, tóm tắt và phân tích cảm xúc (lời gọi model được mock trong test).</li><li>Thu hồi phiên tức thì từ Core, metric Prometheus và workflow CI.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Chưa kiểm chứng / chưa có</h4><ul><li>Lời gọi Claude API thật: test mock model.</li><li>Một lần chạy đầy đủ <code>local-e2e.cjs</code> cùng Core, và giao diện chat trong trình duyệt.</li><li>Backup, TLS, luật cảnh báo và failover cho bản triển khai bằng compose.</li><li>Chưa có: tìm kiếm tin nhắn, thông báo ngoài chat, object storage và quét virus cho tệp đính kèm, hàng đợi fan-out tin nhắn.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Đánh đổi</div><div class="cs-body"><div class="tradeoffs"><div><h4>Socket nỗ lực tốt nhất, bắt kịp đáng tin</h4><p>Đơn giản và rẻ hơn việc đảm bảo giao hàng qua socket, và số thứ tự giúp khôi phục theo cách xác định.</p></div><div><h4>Outbox nghĩa là at-least-once</h4><p>Handler phải idempotent, tốn thêm cẩn thận nhưng không bao giờ mất tác vụ phụ.</p></div><div><h4>Tệp đính kèm trên volume dùng chung</h4><p>Volume filesystem dùng chung dễ chạy nhưng không phải object storage, nên mở rộng vượt một máy cần thay đổi.</p></div><div><h4>Mỗi dịch vụ một database</h4><p>Không join chéo dịch vụ; danh tính chỉ đi qua ranh giới bằng token ký ngắn hạn.</p></div></div></div></section>
+  
+  <div class="cs-nav"><a href="teddypet-api-design.html"><small>← Trước</small><strong>Thiết kế API</strong></a><a href="teddypet-media.html" style="text-align:right"><small>Tiếp →</small><strong>Dịch vụ Media</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

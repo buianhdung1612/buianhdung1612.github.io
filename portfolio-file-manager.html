@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>File Management Service | TeddyPet</title>
+  <meta name="description" content="Self-hosted File Management Service case study." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/project-base.css" />
+  <link rel="stylesheet" href="css/project.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><a href="teddypet-media.html">Media Service</a><span>/</span><span>File Manager</span></div>
+    <div class="eyebrow">PLATFORM SERVICE · SELF-HOSTED MEDIA</div>
+    <h1 style="margin-top:20px">File Management Service</h1>
+    <p class="lead">A dedicated service for authorizing, validating, processing, organizing, and serving application files on infrastructure I control.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap project-case-study file-manager-case-study">
+<div class="note-box" style="margin-bottom:40px">Detailed note, written in English. The Vietnamese case study summarises this page. <a href="teddypet-media.html" style="color:var(--accent)">Media Service →</a> · <a href="vi/teddypet-media.html" style="color:var(--accent)">Dịch vụ Media →</a></div>
+
+    
+    
+    <div class="project-cover"><img src="img/portfolio/file-manager-cover.svg" alt="Next.js frontend, NestJS File Manager, MongoDB metadata, and persistent disk architecture" /></div>
+    <div class="project-overview-grid">
+      <section class="project-case-block"><span class="project-section-index">01 / SERVICE BOUNDARY</span><h2>Keep binary media traffic outside the commerce API.</h2><p>The file service owns upload authorization, file validation, image processing, media metadata, and delivery. The commerce API stores the stable relative file path beside business data, so its endpoints stay focused on ecommerce rules instead of receiving large file bodies.</p></section>
+      <aside class="project-facts"><div><span>Service</span><strong>NestJS · TypeScript</strong></div><div><span>Metadata</span><strong>MongoDB · Prisma</strong></div><div><span>Image processing</span><strong>Sharp · WebP · thumbnails</strong></div><div><span>Storage</span><strong>Self-managed persistent disk</strong></div></aside>
+    </div>
+    <section class="project-layer-section"><div class="project-section-heading"><span class="project-section-index">02 / UPLOAD FLOW</span><h2>Authorize with a one-time ticket, then upload through the Next.js proxy.</h2><p>The authenticated frontend requests a short-lived, single-use upload ticket. This is an application-managed upload capability, not an S3 presigned URL.</p></div>
+      <figure class="media-sequence-figure">
+        <a href="img/portfolio/file-manager-sequence.svg" target="_blank" rel="noopener noreferrer" aria-label="Open the full-size File Manager sequence diagram">
+          <img src="img/portfolio/file-manager-sequence.svg" alt="English sequence diagram showing file selection, JWT ticket request through the Next.js proxy, one-time upload to File Manager, file bytes on persistent storage, metadata in MongoDB, the Linh_BE product update in PostgreSQL, and proxied media retrieval" loading="lazy" />
+        </a>
+        <figcaption>Upload authorization, one-time transfer, media retrieval, and storage boundaries. <span>Open full-size diagram ↗</span></figcaption>
+      </figure>
+      <div class="media-project-flow-note"><strong>File bytes do not pass through Linh_BE.</strong><span>The frontend sends the file through the Next.js proxy to File Manager, then submits the returned path to Linh_BE with the product or other business record. Linh_BE stores the reference, not the file body.</span></div>
+    </section>
+    <section class="project-query-section"><div class="project-section-heading"><span class="project-section-index">03 / FILE LIFECYCLE</span><h2>One controlled policy for different media.</h2></div>
+      <div class="project-query-grid media-type-grid">
+        <article><h3><span>IMAGE</span> Optimize for delivery</h3><p>JPEG, PNG, WebP, and GIF are allowlisted and signature checked. Still images are converted to WebP with thumbnail variants; animated GIFs retain their original animation.</p></article>
+        <article><h3><span>VIDEO</span> Preserve the source</h3><p>MP4 and WebM are validated and stored without transcoding. Streaming renditions require a separate processing pipeline and deployment capacity.</p></article>
+        <article><h3><span>AUDIO</span> Keep original media</h3><p>Supported MP3, M4A, WAV, OGG, and WebM audio files are stored under generated filenames with validated MIME metadata.</p></article>
+        <article><h3><span>DOCUMENT</span> Narrow allowlist</h3><p>PDF is supported. Executables, HTML, SVG, and unknown formats are rejected to reduce the risk of serving active content.</p></article>
+      </div>
+      <div class="query-policy media-storage-policy"><div><span class="project-section-index">FILE BYTES</span><strong>Persistent volume</strong><p>Stored on the media server disk outside temporary upload staging.</p></div><div><span class="project-section-index">ASSET METADATA</span><strong>MongoDB</strong><p>Type, size, hash, folder, timestamps, URLs, and soft-delete state.</p></div><div><span class="project-section-index">BUSINESS DATA</span><strong>PostgreSQL</strong><p>Linh_BE stores a relative path with its product or other record.</p></div></div>
+    </section>
+    <section class="project-engineering-section"><div class="project-section-heading"><span class="project-section-index">04 / SECURITY & OPERATIONS</span><h2>Design for safe uploads and durable storage.</h2></div><div class="project-decision-list">
+      <div><span>01</span><p><strong>Short-lived, one-use tickets.</strong> A random capability is bound to the user and upload constraints, stored by hash, expires quickly, and cannot authorize a second upload.</p></div>
+      <div><span>02</span><p><strong>Validate file bytes.</strong> Request limits constrain resource use; signature checks and generated names avoid trusting browser MIME headers or user paths.</p></div>
+      <div><span>03</span><p><strong>Keep staging private.</strong> In-progress uploads stay outside publicly served media directories; only finalized assets receive media paths.</p></div>
+      <div><span>04</span><p><strong>Make deployment assumptions explicit.</strong> Persistent storage, capacity monitoring, and tested backups are required. Multiple app instances need shared self-managed storage; container-local disk is not durable.</p></div>
+    </div></section>
+    <section class="project-interview-note"><span class="project-section-index">INTERVIEW WALKTHROUGH</span><p>“I separated binary uploads from the commerce API. The frontend authenticates to request a short-lived, one-use upload capability, then sends the file to a dedicated NestJS service. That service validates file signatures, processes images with Sharp, persists the bytes, and records queryable metadata in MongoDB. The commerce backend stores only the stable media reference. The main production trade-off is owning durable storage, monitoring, and backups.”</p></section>
+    <div class="project-footer-tags"><span>NestJS</span><span>MongoDB</span><span>Prisma</span><span>JWT</span><span>Multer</span><span>Sharp</span><span>WebP</span><span>Persistent Storage</span></div>
+  
+  <div style="margin-top:50px"><a class="btn btn-dark" href="teddypet-media.html">← Media Service</a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

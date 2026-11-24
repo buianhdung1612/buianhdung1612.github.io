@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Đánh giá sản phẩm có kiểm duyệt | TeddyPet</title>
+  <meta name="description" content="Case study tính năng đánh giá sản phẩm: xác thực mua hàng, kiểm duyệt, thống kê rating và API giữa Next.js với NestJS." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/project-base.css" />
+  <link rel="stylesheet" href="css/project.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><a href="teddypet-frontend.html">Storefront & Admin</a><span>/</span><span>Reviews</span></div>
+    <div class="eyebrow">TEDDYPET · POST-PURCHASE TRUST</div>
+    <h1 style="margin-top:20px">Đánh giá sản phẩm có kiểm duyệt</h1>
+    <p class="lead">Biến đánh giá thành một phần đáng tin của hành trình mua hàng: chỉ khách có đơn đã giao mới gửi được, nội dung chờ duyệt trước khi xuất hiện công khai.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap project-case-study">
+<div class="note-box" style="margin-bottom:40px">Detailed note, written in Vietnamese. The English case study is the summary of this page. <a href="teddypet-frontend.html" style="color:var(--accent)">Storefront & Admin →</a> · <a href="vi/teddypet-frontend.html" style="color:var(--accent)">Storefront & Admin →</a></div>
+
+    
+    
+
+    <div class="project-overview-grid">
+      <section class="project-case-block"><span class="project-section-index">MỤC TIÊU & QUYẾT ĐỊNH</span><h2>Mỗi đánh giá phải gắn với một lần mua có thật.</h2><p>Frontend chỉ gửi mã đơn hàng, mã dòng sản phẩm, số sao, nội dung và ảnh. Backend xác minh đơn thuộc về người đang đăng nhập, đã giao thành công, rồi tự suy ra sản phẩm và biến thể từ dữ liệu snapshot. Nhờ vậy client không thể giả mạo đánh giá cho một sản phẩm hoặc đơn hàng khác.</p></section>
+      <aside class="project-facts"><div><span>Điều kiện tạo</span><strong>Đơn đã giao · đúng chủ tài khoản</strong></div><div><span>Vòng đời</span><strong>Chờ duyệt · đã duyệt · từ chối</strong></div><div><span>Ảnh đính kèm</span><strong>Tối đa 5 ảnh · 5 MB mỗi ảnh</strong></div><div><span>Thống kê sản phẩm</span><strong>Tổng điểm + số review đã duyệt</strong></div></aside>
+    </div>
+
+    <section class="project-query-section"><div class="project-section-heading"><span class="project-section-index">01 / LUỒNG NGHIỆP VỤ</span><h2>Từ đơn hàng đã giao đến điểm rating công khai.</h2><p>Trạng thái kiểm duyệt và thống kê rating được cập nhật cùng giao dịch để danh sách đánh giá và điểm trung bình không lệch nhau.</p></div>
+      <div class="review-flow" role="img" aria-label="Verified purchase to moderated public product review flow">
+        <article><small>01 · VERIFIED ORDER</small><strong>Khách gửi review</strong><p>Chọn sản phẩm ngay trong đơn đã giao; nhập sao, nhận xét và ảnh.</p></article>
+        <article><small>02 · SERVER VALIDATION</small><strong>BE xác minh quyền</strong><p>Kiểm tra chủ đơn, trạng thái giao hàng, dòng hàng và review trùng.</p></article>
+        <article><small>03 · MODERATION</small><strong>Chờ quản trị duyệt</strong><p>Admin duyệt hoặc từ chối; có thể lưu lý do để phản hồi cho khách.</p></article>
+        <article><small>04 · ATOMIC AGGREGATE</small><strong>Cập nhật rating</strong><p>Chỉ review được duyệt mới cộng vào tổng điểm và số lượng review.</p></article>
+        <article><small>05 · PUBLIC READ</small><strong>Hiển thị storefront</strong><p>Khách xem review đã duyệt, lọc theo số sao và phân trang.</p></article>
+      </div>
+      <div class="review-status-row"><span>Gửi mới → Chờ duyệt</span><span>Sửa review → Chờ duyệt lại</span><span>Duyệt → Tính vào rating</span><span>Từ chối / gỡ → Loại khỏi rating</span></div>
+    </section>
+
+    <section class="project-query-section"><div class="project-section-heading"><span class="project-section-index">02 / API CONTRACT</span><h2>Contract phân tách dữ liệu công khai, cá nhân và vận hành.</h2><p>Các route ghi yêu cầu JWT; route quản trị đi qua permission guard. Tất cả request được validate nghiêm ngặt ở DTO.</p></div>
+      <div class="layout-contract-table-wrap"><table class="layout-contract-table"><thead><tr><th>Method & endpoint</th><th>Phạm vi</th><th>Trách nhiệm</th></tr></thead><tbody>
+        <tr><td><code>GET /api/v1/client/review/:productId?page&amp;limit&amp;rating</code></td><td>Công khai</td><td>Trả review đã duyệt, tổng số đã duyệt, rating trung bình và phân trang.</td></tr>
+        <tr><td><code>GET /api/v1/client/review/my-reviews</code></td><td>Khách hàng · JWT</td><td>Lịch sử review của tài khoản, trạng thái và lý do từ chối.</td></tr>
+        <tr><td><code>POST /api/v1/client/review/create</code></td><td>Khách hàng · JWT</td><td>Tạo review chờ duyệt cho một dòng sản phẩm trong đơn đã giao.</td></tr>
+        <tr><td><code>PATCH /api/v1/client/review/update/:id</code></td><td>Chủ review · JWT</td><td>Sửa nội dung; chuyển về chờ duyệt và gỡ đóng góp rating cũ nếu đã duyệt.</td></tr>
+        <tr><td><code>GET /api/v1/admin/review/list?status&amp;search&amp;page&amp;limit&amp;rating</code></td><td>Admin · JWT + PermissionGuard</td><td>Tìm kiếm và phân trang hàng đợi kiểm duyệt; không N+1 khi tải thông tin người dùng/sản phẩm.</td></tr>
+        <tr><td><code>PATCH /api/v1/admin/review/change-status/:id</code></td><td>Admin · JWT + PermissionGuard</td><td>Duyệt hoặc từ chối, lưu actor, thời điểm và lý do tùy chọn.</td></tr>
+        <tr><td><code>DELETE /api/v1/admin/review/delete/:id</code></td><td>Admin · JWT + PermissionGuard</td><td>Gỡ mềm, giữ audit và đồng bộ lại rating nếu nội dung đang được duyệt.</td></tr>
+      </tbody></table></div>
+      <div class="layout-contract-code"><div><span class="layout-code-label">REQUEST · CREATE REVIEW</span><pre><code>{
+  "orderId": "uuid-from-customer-order",
+  "orderItemId": "uuid-from-order-line",
+  "rating": 5,
+  "comment": "Chất lượng tốt, đóng gói cẩn thận.",
+  "images": ["/media/review/photo.webp"]
+}</code></pre></div><div><span class="layout-code-label">SERVER-OWNED FIELDS</span><pre><code>// Không nhận productId hoặc variant từ trình duyệt.
+productId = verifiedOrderItem.productId
+variant   = verifiedOrderItem.variant
+status    = "pending"
+userId    = authenticatedUser.id</code></pre></div></div>
+      <div class="review-callout"><strong>Giới hạn tin cậy:</strong> Form review giới hạn ảnh 5 MB và tải qua upload ticket. File Manager kiểm tra loại file, dung lượng theo cấu hình môi trường và khớp nội dung upload với ticket; DTO review giới hạn số URL và độ dài.</div>
+    </section>
+
+    <section class="project-query-section"><div class="project-section-heading"><span class="project-section-index">03 / DATA MODEL</span><h2>Snapshot mua hàng, nội dung review và audit moderation.</h2><p>Các trường liên kết giữ được nguồn gốc đánh giá; nội dung kiểm duyệt tách khỏi nội dung khách viết.</p></div>
+      <div class="layout-contract-table-wrap"><table class="layout-contract-table"><thead><tr><th>Trường</th><th>Ý nghĩa</th><th>Quy tắc</th></tr></thead><tbody>
+        <tr><td><code>id</code></td><td>Định danh review.</td><td>UUID do backend tạo.</td></tr>
+        <tr><td><code>productId</code></td><td>Sản phẩm được nhận xét.</td><td>Suy ra từ order item đã xác minh; có index phục vụ trang chi tiết.</td></tr>
+        <tr><td><code>userId</code></td><td>Tài khoản người mua.</td><td>Lấy từ JWT; nullable để giữ review nếu tài khoản bị xóa.</td></tr>
+        <tr><td><code>orderId</code> · <code>orderItemId</code></td><td>Đơn hàng và dòng hàng chứng minh lần mua.</td><td>Unique theo order item để một sản phẩm trong đơn chỉ có một review.</td></tr>
+        <tr><td><code>variant</code></td><td>Snapshot biến thể tại lúc mua.</td><td>JSON từ dòng hàng, không lấy dữ liệu tùy ý từ client.</td></tr>
+        <tr><td><code>rating</code> · <code>content</code> · <code>images</code></td><td>Số sao, nhận xét và ảnh đính kèm.</td><td>Rating 1–5; nội dung tối đa 3.000 ký tự; tối đa 5 URL ảnh.</td></tr>
+        <tr><td><code>status</code> · <code>moderationReason</code></td><td>Trạng thái duyệt và phản hồi khi từ chối.</td><td>pending / approved / rejected; chỉ approved được public.</td></tr>
+        <tr><td><code>moderatedBy</code> · <code>moderatedAt</code></td><td>Người xử lý và thời điểm.</td><td>Audit moderation riêng với nội dung review.</td></tr>
+        <tr><td><code>deleted</code> · <code>deletedAt</code> · <code>deletedBy</code></td><td>Gỡ mềm và lịch sử người thực hiện.</td><td>Không xóa dấu vết nghiệp vụ khỏi database.</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section class="project-engineering-section"><div class="project-section-heading"><span class="project-section-index">04 / QUYẾT ĐỊNH KỸ THUẬT</span><h2>Giữ dữ liệu chính xác khi nhiều tác vụ cập nhật cùng lúc.</h2></div>
+      <div class="project-decision-list">
+        <div><span>01</span><p><strong>Unique theo người dùng và order item.</strong> Một dòng hàng chỉ nhận một review từ cùng tài khoản; unique constraint ở PostgreSQL chặn race giữa hai request đồng thời.</p></div>
+        <div><span>02</span><p><strong>Rating aggregate thay vì tính lại toàn bộ.</strong> Tổng điểm và số review đã duyệt được tăng/giảm nguyên tử trong cùng transaction với moderation; đổi trạng thái lặp lại được bảo vệ bằng optimistic concurrency.</p></div>
+        <div><span>03</span><p><strong>Sửa review đưa về hàng chờ.</strong> Nội dung đã duyệt không tiếp tục xuất hiện khi đã thay đổi; thống kê cũ được gỡ cho tới khi duyệt lại.</p></div>
+        <div><span>04</span><p><strong>Gỡ mềm có audit.</strong> Giữ dấu vết actor và thời điểm, đồng thời loại review khỏi truy vấn public và thống kê.</p></div>
+        <div><span>05</span><p><strong>Giữ review cũ khi nâng cấp.</strong> Migration đánh dấu review hiện có là đã duyệt và backfill aggregate để không làm mất nội dung đang hiển thị trước đây.</p></div>
+      </div>
+    </section>
+
+    <section class="project-query-section"><div class="project-section-heading"><span class="project-section-index">05 / FRONTEND & BACKEND</span><h2>Giao diện phản hồi nhanh; backend là nguồn sự thật.</h2></div>
+      <div class="project-query-grid">
+        <article><h3><span>CLIENT · NEXT.JS</span>Gửi từ trang chi tiết đơn</h3><p>Nút đánh giá chỉ xuất hiện với đơn đã giao và dòng hàng chưa được đánh giá. Khách có thể gửi tối đa 5 ảnh, xem trạng thái và lý do bị từ chối, rồi sửa để đưa review quay lại hàng chờ.</p></article>
+        <article><h3><span>PUBLIC · STOREFRONT</span>Hiển thị dữ liệu đã duyệt</h3><p>Trang sản phẩm tải danh sách có phân trang và lọc số sao. TanStack Query làm mới cache trình duyệt sau thay đổi; dữ liệu chưa duyệt không đi qua public API.</p></article>
+        <article><h3><span>ADMIN · OPERATIONS</span>Kiểm duyệt có lý do</h3><p>Bảng quản trị hỗ trợ tìm kiếm, lọc trạng thái, duyệt, ẩn kèm lý do và gỡ mềm. Thông tin review, tài khoản và sản phẩm được truy vấn theo lô.</p></article>
+        <article><h3><span>BACKEND · NESTJS / PRISMA</span>Quy tắc nghiệp vụ tại server</h3><p>DTO Zod strict, JWT/permission guard, transaction PostgreSQL, unique constraint và aggregate nguyên tử bảo vệ toàn bộ lifecycle review.</p></article>
+      </div>
+    </section>
+
+    <div class="project-footer-tags"><span>NestJS</span><span>Prisma</span><span>PostgreSQL</span><span>Next.js</span><span>TanStack Query</span><span>Verified Purchase</span><span>Moderation Workflow</span></div>
+  
+  <div style="margin-top:50px"><a class="btn btn-dark" href="teddypet-frontend.html">← Storefront & Admin</a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

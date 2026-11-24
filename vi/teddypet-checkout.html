@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout &amp; Tồn kho | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="Cách TeddyPet giữ kho, mã giảm giá và đơn hàng nhất quán khi các request chạy đua, retry hoặc đến hai lần." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../teddypet-checkout.html" />
+  <link rel="alternate" hreflang="vi" href="teddypet-checkout.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../teddypet-checkout.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><a href="projects.html">Dự án</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Checkout & Tồn kho</span></div>
+    <div class="eyebrow">TEDDYPET · CHECKOUT & TỒN KHO</div>
+    <h1 style="margin-top:20px">Checkout không bao giờ <span class="outline">bán vượt</span> kho</h1>
+    <p class="lead">Cách TeddyPet giữ kho, mã giảm giá và đơn hàng nhất quán khi các request chạy đua, retry hoặc đến hai lần.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · TEST CASES IN REPO</span><span class="pill">PostgreSQL</span><span class="pill">Prisma</span><span class="pill">Idempotency</span><span class="pill">Serializable</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Vấn đề</small><p>Hai người cùng bấm mua món cuối cùng, client retry khi mất phản hồi, admin lưu sản phẩm từ form cũ.</p></div><div class="tldr-card"><small>Cách giải</small><p>Idempotency key, một câu lệnh cập nhật kho có điều kiện cho mỗi SKU, transaction Serializable có retry giới hạn, và dấu hiệu chỉ nhả kho một lần.</p></div><div class="tldr-card"><small>Bằng chứng</small><p>Integration test PostgreSQL: 100 key khác nhau tranh 10 sản phẩm, đúng 10 đơn thành công.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Vấn đề</div><div class="cs-body"><p class="lead">Checkout ngây thơ đọc tồn kho, kiểm tra, rồi mới ghi giá trị mới. Khi nhiều request chạy đồng thời, chuỗi đó có thể bán cùng một sản phẩm hai lần, tạo hai đơn cho một lần bấm, hoặc mất phần giữ hàng khi admin lưu form sản phẩm cũ. Client di động còn retry khi mất phản hồi, nên cùng một lần mua có thể đến nhiều lần.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Ràng buộc</div><div class="cs-body"><ul class="rule-list"><li>Không bao giờ bán nhiều hơn số lượng có, kể cả khi các request tranh món cuối cùng.</li><li>Cùng Idempotency-Key và cùng payload trả lại đúng đơn cũ; cùng key nhưng payload khác bị từ chối với <code>409</code>.</li><li>Giữ kho, dùng coupon, tạo đơn, dòng hàng và payment attempt đầu tiên cùng commit hoặc cùng không.</li><li>Tiền là số nguyên VND và luôn được backend tính lại, không tin client.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Thiết kế</div><div class="cs-body"><ol class="design-steps"><li><h4>Một key, một lần mua</h4><p>Phạm vi là <code>checkout:user:&lt;id&gt;</code>. Key và body chuẩn hoá được băm SHA-256 rồi lưu cùng đơn trong một transaction. <code>pg_advisory_xact_lock</code> theo phạm vi và hash này tuần tự hoá các request cùng key.</p></li><li><h4>Giữ kho bằng một câu lệnh nguyên tử</h4><p>Kho được trừ bằng <code>updateMany({ where: { id, stock: { gte: quantity } }, data: { stock: { decrement: quantity } } })</code>. Nếu số dòng bị ảnh hưởng khác 1, request bị từ chối bằng conflict. Không có khoảng hở đọc rồi ghi.</p></li><li><h4>Transaction Serializable, retry có giới hạn</h4><p>Transaction chạy ở mức Serializable. Lỗi serialization và deadlock (<code>P2034</code>, <code>P2002</code>, SQLSTATE <code>40001</code> / <code>40P01</code>) được thử lại tối đa năm lần với backoff luỹ thừa và jitter. Chỉ việc của database chạy trong callback nên một lần thử bị rollback có thể lặp lại an toàn.</p></li><li><h4>Nhả kho đúng một lần</h4><p>Huỷ hoặc hết hạn đơn sẽ chiếm <code>stockReleasedAt</code> bằng update có điều kiện dưới khoá dòng (<code>SELECT … FOR UPDATE</code> trên đơn). Kho và lượt coupon chỉ được hoàn bởi request thắng phần chiếm này, và một dòng audit ghi lại.</p></li><li><h4>Sửa tồn kho từ form cũ không xoá được phần đã giữ</h4><p>Lần admin sửa kho mang theo snapshot lúc bắt đầu. Snapshot cũ bị từ chối và toàn bộ cập nhật sản phẩm rollback, nên checkout đã giữ kho trong lúc đó vẫn được bảo toàn.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Bằng chứng trong code</div><div class="cs-body"><div class="code-card"><div class="code-head"><span>Giữ kho: một câu update có điều kiện</span><code>Linh_BE/src/routes/orders/orders.service.ts</code></div><pre><code>for (const sku of skus) {
+  const quantity = requested.get(sku.id)!.quantity;
+  const reserved = await tx.sKU.updateMany({
+    where: { id: sku.id, deleted: false, stock: { gte: quantity } },
+    data: { stock: { decrement: quantity } },
+  });
+  if (reserved.count !== 1)
+    throw new ConflictException(/* kho đã đổi, thử lại */);
+}</code></pre></div><ul class="evi-list"><li><code>Linh_BE/src/routes/orders/orders.service.ts</code><span>Transaction checkout, giữ kho, xử lý coupon</span></li><li><code>Linh_BE/src/shared/idempotency/idempotency.service.ts</code><span>Băm key và payload, advisory lock, replay và phát hiện payload lệch</span></li><li><code>Linh_BE/src/shared/database/serializable.ts</code><span>Wrapper Serializable với retry giới hạn và jitter</span></li><li><code>Linh_BE/src/routes/orders/inventory/order-inventory.service.ts</code><span>Nhả kho và hoàn coupon đúng một lần</span></li><li><code>Linh_BE/src/routes/payments/payment-postgres.integration.spec.ts</code><span>Các kịch bản chạy đua, rollback và sửa từ form cũ</span></li></ul><p class="src-note">Đường dẫn tính từ thư mục gốc của repo TeddyPet.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Kiểm chứng</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> Đã thể hiện</h4><ul><li>100 key khác nhau tranh 10 sản phẩm: đúng 10 đơn được nhận, 90 bị conflict, kho về 0, mỗi đơn đã lưu có một dòng hàng và một payment attempt.</li><li>Các request đồng thời cùng key chỉ commit một đơn, một lần trừ kho và một payment attempt đầu tiên.</li><li>Cùng key nhưng payload khác được tuần tự hoá và ý định sai lệch không bao giờ được ghi lại.</li><li>Lỗi khi tạo payment attempt làm rollback kho, coupon, dòng hàng và bản ghi idempotency.</li><li>Lượt coupon cuối cùng được giữ một lần và hoàn một lần, kể cả khi huỷ lặp lại.</li><li>Lần sửa kho từ snapshot cũ bị từ chối và rollback; hai admin sửa từ cùng một snapshot thì chỉ một người thành công.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Chưa kiểm chứng / chưa có</h4><ul><li>Các test có trong repo. Kết quả chưa được chạy lại khi viết trang này.</li><li>Không công bố con số throughput hay latency. Các kịch bản chứng minh tính đúng, không chứng minh sức chịu tải.</li><li>Chưa chạy trên hạ tầng giống production hay nhiều instance API.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Đánh đổi</div><div class="cs-body"><div class="tradeoffs"><div><h4>Serializable làm giảm throughput</h4><p>Serializable kèm retry là cách đơn giản nhất để giữ đúng, nhưng một SKU quá nóng sẽ gặp retry và conflict. Hệ thống trả conflict rõ ràng thay vì bán vượt.</p></div><div><h4>Kho bị giữ có thể nằm không</h4><p>Kho được giữ đến hạn thanh toán (mặc định 15 phút, thêm tối đa 5 phút để xác minh). Đơn chưa trả tiền vì vậy giữ hàng một lúc.</p></div><div><h4>Thanh toán không rõ kết quả không bao giờ tự nhả kho</h4><p>Nếu kết quả từ nhà cung cấp chưa rõ, đơn chuyển sang review sau 24 giờ và chỉ admin mới nhả được. Cách này tránh bán lại hàng có thể đã được trả tiền.</p></div><div><h4>Mọi thứ nằm trong PostgreSQL</h4><p>Không có Redis cache dữ liệu phía trước catalogue. Giữ một nguồn sự thật duy nhất, đổi lại tải đọc dồn vào database.</p></div></div></div></section>
+  
+  <div class="cs-nav"><span></span><a href="teddypet-payments.html" style="text-align:right"><small>Tiếp →</small><strong>Thanh toán & Giao hàng</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

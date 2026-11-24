@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Storefront &amp; Admin | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="One Next.js app serving the storefront and the admin console, with architecture rules that fail the build." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="teddypet-frontend.html" />
+  <link rel="alternate" hreflang="vi" href="vi/teddypet-frontend.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/teddypet-frontend.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Storefront & Admin</span></div>
+    <div class="eyebrow">TEDDYPET · STOREFRONT & ADMIN</div>
+    <h1 style="margin-top:20px">A frontend with <span class="outline">boundaries</span></h1>
+    <p class="lead">One Next.js app serving the storefront and the admin console, with architecture rules that fail the build.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · STATIC CHECKS PASSED (2026-11-06)</span><span class="pill">Next.js</span><span class="pill">React</span><span class="pill">TanStack Query</span><span class="pill">Zustand</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Problem</small><p>A large frontend rots when features import each other and components call the network directly.</p></div><div class="tldr-card"><small>Approach</small><p>Two apps in one repo with enforced import rules, API adapters per feature, generated API types and a deliberate rendering strategy.</p></div><div class="tldr-card"><small>Proof</small><p>Architecture, API version, API contract and <code>tsc</code> checks all passed on 2026-11-06; 85 route pages.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Problem</div><div class="cs-body"><p class="lead">A storefront plus an admin console quickly grows into hundreds of files. Without rules, admin code leaks into the shopper bundle, components fetch data on their own, and the cache behaves unpredictably.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Constraints</div><div class="cs-body"><ul class="rule-list"><li>Storefront and admin code must never import each other.</li><li>Components and pages must not call the network directly; requests belong in an API adapter.</li><li>Public pages must be fast and fresh without hitting the API on every view.</li><li>Checkout must recover when a response is lost.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Design</div><div class="cs-body"><ol class="design-steps"><li><h4>Boundaries enforced by a script</h4><p><code>scripts/check-architecture.mjs</code> runs before every build: no imports between <code>client/</code> and <code>admin/</code>, <code>shared/</code> cannot import either, and feature pages, components and hooks cannot call <code>fetch</code> or the Axios clients.</p></li><li><h4>Server state and local state</h4><p>TanStack Query holds server data; Zustand holds session and local UI state. The access token is not persisted and refresh is serialized with <code>navigator.locks</code>.</p></li><li><h4>Deliberate rendering</h4><p>The home page uses ISR, shop and blog lists render per request, and cart, checkout and admin use client-side queries. Public data comes from server-only fetches that use the Next.js Data Cache; Core calls a secured revalidation endpoint to expire cache tags.</p></li><li><h4>Contract-generated types</h4><p>API types are generated from the backend OpenAPI file, so a breaking backend change fails the frontend check.</p></li><li><h4>Checkout recovery</h4><p>The checkout stores its idempotency key and payload in the session so a lost response can be recovered by replaying the same request.</p></li><li><h4>Content tools for the shop owner</h4><p>A page-layout editor reorders and toggles blocks, previews drafts, publishes and refreshes the public cache. Product reviews go through moderation. The UI is available in English and Vietnamese.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Evidence in code</div><div class="cs-body"><ul class="evi-list"><li><code>Linh_FE/scripts/check-architecture.mjs</code><span>Import and network rules that fail the build</span></li><li><code>Linh_FE/src/server/public-data.ts</code><span>Server-only public fetches with the Data Cache</span></li><li><code>Linh_FE/docs/CLIENT_CACHE_STRATEGY.md</code><span>Cache strategy</span></li><li><code>Linh_FE/docs/FRONTEND_ARCHITECTURE.md</code><span>Folder structure and layering</span></li><li><code>Linh_FE/src/shared/api-contracts/generated.ts</code><span>Generated API types</span></li></ul><p class="src-note">Paths are relative to the TeddyPet repository.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Verification</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> What is shown</h4><ul><li>85 route pages across the storefront and admin console.</li><li>Cart merge on login, checkout with idempotency recovery, VNPay result page, admin CRUD features, page-layout editor and the chat panel.</li><li>Architecture, API version, API contract and <code>tsc</code> checks all passed on 2026-11-06.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Not verified / not built</h4><ul><li>Only five test files exist, all for logic. There are no component or browser end-to-end tests.</li><li>Admin route protection runs on the client; there is no server-side middleware yet. The API still enforces permissions.</li><li>No Dockerfile or CI yet (<code>output: 'standalone'</code> is already set).</li><li>Two known mismatches with the backend: the admin notifications page and the folder-delete call.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Trade-offs</div><div class="cs-body"><div class="tradeoffs"><div><h4>One repo, two apps</h4><p>Shared tooling and types are simple, but the boundary has to be policed by the script rather than by separate packages.</p></div><div><h4>Client-side admin guard</h4><p>Fast to build, but the UI guard is cosmetic. Real protection is the API permission guard.</p></div><div><h4>Generated types</h4><p>They remove drift, but force a regeneration step after every API change.</p></div></div></div></section>
+  <div class="deep-box reveal"><h4>Detailed notes</h4><ul><li><a href="portfolio-client.html">Customer storefront in detail</a><span class="pill">English</span></li><li><a href="portfolio-admin.html">Admin console</a><span class="pill">English</span></li><li><a href="portfolio-feature-page-layout.html">Homepage layout management</a><span class="pill">Vietnamese</span></li><li><a href="portfolio-feature-reviews.html">Moderated product reviews</a><span class="pill">Vietnamese</span></li></ul></div>
+  <div class="cs-nav"><a href="teddypet-media.html"><small>← Previous</small><strong>Media Service</strong></a><a href="teddypet.html" style="text-align:right"><small>Back to</small><strong>TeddyPet</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

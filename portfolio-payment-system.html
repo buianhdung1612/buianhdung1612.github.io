@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Order &amp; Payment System | TeddyPet</title>
+  <meta name="description" content="Sơ đồ luồng tạo đơn, VNPay, COD, đối soát và tạo vận đơn GHN của TeddyPet." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/project-base.css" />
+  <link rel="stylesheet" href="css/project.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><a href="teddypet-payments.html">Payments & Fulfilment</a><span>/</span><span>Order & Payment flow</span></div>
+    <div class="eyebrow">TEDDYPET · ORDER & PAYMENT SYSTEM</div>
+    <h1 style="margin-top:20px">Luồng tạo đơn và thanh toán</h1>
+    <p class="lead">Backend chốt giá và giữ hàng một lần. Kết quả VNPay được xác minh qua IPN hoặc đối soát; Admin xác nhận đơn trước khi worker tạo vận đơn GHN.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap project-case-study payment-study">
+<div class="note-box" style="margin-bottom:40px">Detailed note, written in Vietnamese. The English case study is the summary of this page. <a href="teddypet-payments.html" style="color:var(--accent)">Payments & Fulfilment →</a> · <a href="vi/teddypet-payments.html" style="color:var(--accent)">Thanh toán & Giao hàng →</a></div>
+
+    
+    
+
+    <section class="payment-flow" aria-labelledby="payment-diagram-title">
+      <div class="project-section-heading"><span class="project-section-index">SƠ ĐỒ TỔNG QUAN</span><h2 id="payment-diagram-title">Từ giỏ hàng đến giao hàng, gồm cả nhánh khôi phục.</h2><p>Sơ đồ đối chiếu theo mã nguồn FE và BE hiện tại. Trạng thái Order, Payment và Shipping được theo dõi riêng.</p></div>
+      <figure class="payment-diagram"><a href="img/portfolio/order-payment-flow.svg" target="_blank" rel="noopener" aria-label="Mở sơ đồ luồng đặt hàng đầy đủ trong tab mới"><img src="img/portfolio/order-payment-flow.svg" alt="Sơ đồ luồng đặt hàng TeddyPet: FE chuẩn bị checkout và báo giá GHN, BE tạo Order trong transaction, tách COD hoặc VNPay, Admin xác nhận, worker tạo vận đơn và xử lý các ngoại lệ" loading="lazy" /></a><figcaption>Nhấn vào sơ đồ để xem kích thước đầy đủ. Các API trong hình dùng tiền tố <code>/api/v1</code>.</figcaption></figure>
+    </section>
+
+    <section class="payment-flow" aria-labelledby="payment-flow-title">
+      <div class="project-section-heading"><span class="project-section-index">01 / CHECKOUT</span><h2 id="payment-flow-title">Một ý định mua, một Order bền vững.</h2></div>
+      <ol class="payment-flow-steps">
+        <li><span class="payment-step-number">01</span><div><strong>Client gửi yêu cầu tạo đơn</strong><p><code>POST /client/orders</code> cùng <code>Idempotency-Key</code> và giỏ hàng đã chọn. FE lưu key và payload trong session để khôi phục khi mất phản hồi; retry cùng key và payload nhận lại Order cũ, cùng key với payload khác trả <code>409</code>.</p></div></li>
+        <li><span class="payment-step-number">02</span><div><strong>Backend kiểm tra và chốt số tiền</strong><p>FE lấy báo giá GHN trước checkout và gửi <code>shippingQuoteToken</code> cho cả COD lẫn VNPay. BE kiểm tra chữ ký, hạn dùng 10 phút, địa chỉ, SKU và trọng lượng; GHN không được gọi lại trong transaction tạo đơn. Giá, giảm giá, phí ship và tổng tiền VND được chốt ở backend.</p></div></li>
+        <li><span class="payment-step-number">03</span><div><strong>Ghi trong một transaction</strong><p>Giữ tồn khả dụng và lượt coupon; tạo Order <code>PENDING_CONFIRMATION</code> cùng snapshot hàng, địa chỉ và tổng tiền. VNPay có thêm PaymentAttempt và <code>txnRef</code> riêng. Khóa idempotency được lưu cùng transaction.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="payment-flow" aria-labelledby="payment-branch-title">
+      <div class="project-section-heading"><span class="project-section-index">02 / PAYMENT BRANCH</span><h2 id="payment-branch-title">COD và VNPay đi hai nhánh rõ ràng.</h2></div>
+      <div class="payment-branches">
+        <article class="payment-branch payment-branch-cod"><span class="payment-branch-label">COD</span><h3>Chờ cửa hàng xác nhận</h3><p>Order được tạo với <code>paymentStatus=UNPAID</code>. Chưa coi tiền đã thu khi tạo đơn hoặc khi GHN báo giao thành công.</p><div class="payment-branch-next">Admin xác nhận → cho phép tạo vận đơn</div></article>
+        <article class="payment-branch payment-branch-vnpay"><span class="payment-branch-label">VNPAY</span><h3>Chờ kết quả đã xác minh</h3><p>Backend tự ký URL thanh toán sau commit; FE redirect tới VNPay. <code>GET /client/order/vnpay/ipn</code> kiểm tra chữ ký, merchant, số tiền và attempt; Return URL chỉ đưa browser về trang đọc trạng thái từ BE.</p><div class="payment-branch-next">IPN / QueryDR xác nhận PAID → Admin xác nhận</div></article>
+      </div>
+    </section>
+
+    <section class="payment-flow" aria-labelledby="payment-fulfillment-title">
+      <div class="project-section-heading"><span class="project-section-index">03 / FULFILLMENT</span><h2 id="payment-fulfillment-title">Tạo GHN sau cổng xác nhận.</h2></div>
+      <ol class="payment-flow-steps payment-flow-steps-compact">
+        <li><span class="payment-step-number">04</span><div><strong>Admin xác nhận Order</strong><p>Đơn phải còn giữ kho, không có payment review; VNPay phải <code>PAID</code>. Order chuyển sang <code>PENDING_PICKUP</code>.</p></div></li>
+        <li><span class="payment-step-number">05</span><div><strong>Worker tạo vận đơn GHN</strong><p>Worker claim có điều kiện, gọi GHN ngoài transaction, thử lại với cùng <code>client_order_code</code> khi lỗi. Tạo label chưa đồng nghĩa đã bàn giao hàng.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="payment-flow" aria-labelledby="payment-recovery-title">
+      <div class="project-section-heading"><span class="project-section-index">04 / EXCEPTIONS</span><h2 id="payment-recovery-title">Không đoán kết quả khi callback đến muộn.</h2></div>
+      <div class="payment-exceptions">
+        <article><strong>Thanh toán thất bại đã xác minh</strong><p>Còn hạn thì thử attempt mới trên cùng Order, với <code>txnRef</code> mới.</p></article>
+        <article><strong>Mất IPN hoặc timeout</strong><p>Đối soát QueryDR. Hạn trả tiền mặc định 15 phút, giữ hàng thêm tối đa 5 phút để xác minh; retry không kéo dài hạn.</p></article>
+        <article><strong>Hủy hoặc hết hạn</strong><p>Nhả kho và lượt coupon đúng một lần. Nếu tiền về sau khi đơn đã hủy, ghi nhận khoản thu và mở review; không tự khôi phục đơn hay tạo GHN.</p></article>
+      </div>
+    </section>
+    <div class="payment-status-note"><strong>Trạng thái kiểm chứng</strong><span>Luồng transaction và recovery đã có kiểm thử tự động. Chưa có bằng chứng giao dịch VNPay Sandbox thật qua callback HTTPS công khai; refund hiện là yêu cầu xử lý thủ công, chưa phải tiền đã hoàn.</span></div>
+    <div class="project-footer-tags"><span>Order</span><span>Idempotency</span><span>VNPay IPN</span><span>QueryDR</span><span>GHN Worker</span><span>Recovery</span></div>
+  
+  <div style="margin-top:50px"><a class="btn btn-dark" href="teddypet-payments.html">← Payments & Fulfilment</a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+/* Hand-written adjustments on top of the recoloured case-study styles (project-base.css). */
+.project-case-study { color: var(--muted); font-size: 16px; }
+.project-case-study img, .overview-cover img { max-width: 100%; }
+.project-case-study figure img, .payment-diagram img, .auth-feature-flow-figure img, .media-sequence-figure img, .render-cache-figure img, .project-cover img { background: #fff; border-radius: 16px; padding: 10px; }
+.project-case-study h2, .project-case-study h3, .project-case-study h4, .teddypet-overview h2, .teddypet-overview h3 { color: #fff; }
+.project-case-study code, .teddypet-overview code { color: var(--accent); background: rgba(0, 255, 194, .08); padding: 1px 6px; border-radius: 5px; }
+.project-case-study a, .teddypet-overview a { color: var(--accent); }
+.project-case-study section, .teddypet-overview section { scroll-margin-top: 100px; }
+.project-case-study .project-section-heading, .teddypet-overview .overview-section-head { margin-bottom: 26px; }
+.teddypet-overview { color: var(--muted); }
+.teddypet-overview .overview-section { padding: 56px 0; border-top: 1px solid var(--line); }
+.teddypet-overview .overview-card a { margin-top: auto; }

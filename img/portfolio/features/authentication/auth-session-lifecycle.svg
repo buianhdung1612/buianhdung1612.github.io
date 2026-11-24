@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="760" viewBox="0 0 1360 760" role="img" aria-labelledby="title desc">
+  <title id="title">Vòng đời phiên đăng nhập Client</title>
+  <desc id="desc">Trạng thái phiên đăng nhập được lưu trong PostgreSQL: tạo phiên, refresh token rotation, đăng xuất, thu hồi, hết hạn và phát hiện refresh token bị dùng lại.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.panel{fill:#fff;stroke:#d9e2ef;stroke-width:2}.title{font:700 30px Arial,sans-serif;fill:#172b4d}.sub{font:16px Arial,sans-serif;fill:#52647d}.state{fill:#fff;stroke:#2583c5;stroke-width:3}.state-red{fill:#fff5f5;stroke:#d94b52;stroke-width:3}.state-gray{fill:#f2f4f7;stroke:#8b97a8;stroke-width:2}.head{font:700 19px Arial,sans-serif;fill:#172b4d}.small{font:14px Arial,sans-serif;fill:#52647d}.tiny{font:12px Arial,sans-serif;fill:#65758b}.line{stroke:#476581;stroke-width:2.5;fill:none;marker-end:url(#arrow)}.line-red{stroke:#d94b52;stroke-width:2.5;fill:none;marker-end:url(#arrowRed)}.line-green{stroke:#21865b;stroke-width:2.5;fill:none;marker-end:url(#arrowGreen)}.label{font:13px Arial,sans-serif;fill:#34495e}.note{fill:#edf5ff;stroke:#cbdcf0;stroke-width:1.5}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#476581"/></marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d94b52"/></marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#21865b"/></marker>
+  </defs>
+  <rect class="bg" width="1360" height="760" rx="24"/>
+  <text x="48" y="58" class="title">Vòng đời phiên đăng nhập Client</text>
+  <text x="48" y="88" class="sub">Phiên được quản lý trong PostgreSQL; Redis không giữ trạng thái phiên.</text>
+  <rect x="48" y="124" width="1264" height="450" rx="20" class="panel"/>
+  <rect x="94" y="210" width="206" height="92" rx="18" class="state-gray"/>
+  <text x="197" y="248" text-anchor="middle" class="head">Chưa có phiên</text><text x="197" y="275" text-anchor="middle" class="small">Chưa xác thực</text>
+  <rect x="426" y="190" width="270" height="132" rx="20" class="state"/>
+  <text x="561" y="229" text-anchor="middle" class="head">ACTIVE</text><text x="561" y="257" text-anchor="middle" class="small">Device.isActive = true</text><text x="561" y="281" text-anchor="middle" class="small">Có refresh token còn hiệu lực</text>
+  <rect x="986" y="164" width="246" height="100" rx="20" class="state-red"/>
+  <text x="1109" y="204" text-anchor="middle" class="head">REVOKED</text><text x="1109" y="231" text-anchor="middle" class="small">isActive = false</text>
+  <rect x="986" y="360" width="246" height="100" rx="20" class="state-gray"/>
+  <text x="1109" y="400" text-anchor="middle" class="head">EXPIRED / DỌN DẸP</text><text x="1109" y="427" text-anchor="middle" class="small">Cron đánh dấu không hoạt động</text>
+  <path d="M300 250H414" class="line-green"/><text x="309" y="230" class="label">Đăng nhập thành công</text><text x="309" y="251" class="tiny">Transaction tạo Device + hash refresh</text>
+  <path d="M696 216C802 166 870 162 974 198" class="line-red"/><text x="750" y="153" class="label">Đăng xuất · thu hồi phiên · đổi bảo mật</text>
+  <path d="M696 287C805 343 866 391 974 406" class="line"/><text x="744" y="361" class="label">Refresh hết hạn / quá tuổi tối đa</text><text x="774" y="382" class="tiny">Cron dọn phiên chạy hằng ngày</text>
+  <path d="M520 322C474 384 642 384 600 322" class="line-green"/><text x="335" y="430" class="label">Refresh hợp lệ: consume token cũ + tạo token mới</text><text x="394" y="451" class="tiny">Transaction nguyên tử; phiên vẫn ACTIVE</text>
+  <path d="M696 248H816V278H974" class="line-red"/><text x="746" y="234" class="label">Phát hiện refresh token đã dùng lại</text><text x="781" y="257" class="tiny">Thu hồi toàn bộ phiên của browser đó</text>
+  <rect x="48" y="600" width="1264" height="116" rx="18" class="note"/>
+  <text x="76" y="638" class="head">Cách đọc trạng thái trong code</text>
+  <text x="76" y="668" class="small">Đây là trạng thái nghiệp vụ, không phải enum DB: Device.isActive biểu diễn phiên còn hiệu lực; RefreshToken.isUsed + expiresAt biểu diễn vòng đời từng token.</text>
+  <text x="76" y="694" class="small">Access token hết hạn chỉ kích hoạt refresh; phiên kết thúc khi bị thu hồi hoặc không còn refresh token hợp lệ / vượt AUTH_SESSION_MAX_DAYS.</text>
+</svg>

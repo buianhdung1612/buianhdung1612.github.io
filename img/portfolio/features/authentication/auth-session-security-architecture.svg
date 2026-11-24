@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1520 1120" role="img" aria-labelledby="title desc">
+  <title id="title">Kiến trúc phiên đăng nhập và giới hạn lạm dụng</title>
+  <desc id="desc">Sơ đồ cho thấy Redis chỉ lưu bộ đếm giới hạn đăng ký, đăng nhập thất bại, khôi phục mật khẩu và mã TOTP quản trị đã dùng; PostgreSQL lưu người dùng, thiết bị và hash refresh token. Access token là JWT ký số được FE giữ trong bộ nhớ, refresh token là JWT ký số trong cookie HttpOnly do trình duyệt tự gửi.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7fbfc"/><stop offset="1" stop-color="#fff"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#17879a"/></marker>
+    <marker id="arrow-coral" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#df7770"/></marker>
+    <style>
+      text{font-family:Arial,sans-serif}.title{font-size:28px;font-weight:700;fill:#173542}.sub{font-size:15px;fill:#667b84}.head{font-size:17px;font-weight:700;fill:#173542}.label{font-size:14px;fill:#344f5b}.small{font-size:12px;fill:#667b84}.tiny{font-size:11px;fill:#667b84}.mono{font-family:Consolas,monospace;font-size:12px;fill:#345665}.tag{font-size:11px;font-weight:700;letter-spacing:.06em;fill:#168194}.card{fill:#fff;stroke:#dce7eb;stroke-width:1.5}.fe{fill:#eff9fb;stroke:#addce4}.be{fill:#f2f7fb;stroke:#c8d9e6}.redis{fill:#fff6f2;stroke:#f0c9b9}.db{fill:#f4f8f3;stroke:#cddfca}.line{stroke:#cad8dd;stroke-width:1.5;stroke-dasharray:6 7}.arrow{fill:none;stroke:#17879a;stroke-width:2.3;marker-end:url(#arrow)}.arrow-coral{fill:none;stroke:#df7770;stroke-width:2.3;marker-end:url(#arrow-coral)}.arrow-dash{fill:none;stroke:#17879a;stroke-width:2;stroke-dasharray:7 6;marker-end:url(#arrow)}.panel{fill:#fff;stroke:#e1eaee;stroke-width:1.3}.panel-blue{fill:#f2f9fb;stroke:#c5e1e6}.panel-coral{fill:#fff7f5;stroke:#f1d9d5}.panel-gold{fill:#fff9ed;stroke:#efdfbe}
+    </style>
+  </defs>
+  <rect x="1" y="1" width="1518" height="1118" rx="22" fill="url(#bg)" stroke="#e5edf0"/>
+  <text x="48" y="54" class="title">Phiên đăng nhập · Redis Rate Limiting · Token</text>
+  <text x="48" y="82" class="sub">Redis kiểm soát lưu lượng xác thực; PostgreSQL lưu danh tính và phiên có thể thu hồi.</text>
+
+  <!-- System boundaries -->
+  <rect x="48" y="112" width="320" height="108" rx="16" class="card fe"/>
+  <text x="72" y="145" class="tag">FRONTEND · NEXT.JS</text>
+  <text x="72" y="174" class="head">FE + trình duyệt</text>
+  <text x="72" y="198" class="small">Access token trong bộ nhớ · cookie do browser giữ</text>
+
+  <rect x="430" y="112" width="350" height="108" rx="16" class="card be"/>
+  <text x="454" y="145" class="tag">BACKEND · NESTJS</text>
+  <text x="454" y="174" class="head">AuthController → AuthService</text>
+  <text x="454" y="198" class="small">Xác thực, phát hành token, kiểm tra quyền/phiên</text>
+
+  <rect x="842" y="112" width="270" height="108" rx="16" class="card redis"/>
+  <text x="866" y="145" class="tag">REDIS · REDIS_URL</text>
+  <text x="866" y="174" class="head">Bộ đếm bảo vệ xác thực</text>
+  <text x="866" y="198" class="small">Không lưu access/refresh token hay phiên chính</text>
+
+  <rect x="1174" y="112" width="298" height="108" rx="16" class="card db"/>
+  <text x="1198" y="145" class="tag">POSTGRESQL · PRISMA</text>
+  <text x="1198" y="174" class="head">Người dùng · Thiết bị · Phiên</text>
+  <text x="1198" y="198" class="small">Tra phiên theo index · lưu hash refresh token</text>
+
+  <path d="M368 166H422" class="arrow"/><text x="376" y="151" class="tiny">HTTPS API</text>
+  <path d="M780 156H834" class="arrow-coral"/><path d="M834 183H780" class="arrow-dash"/>
+  <text x="785" y="143" class="tiny">đếm / kiểm tra</text>
+  <path d="M780 196H1166" class="arrow"/><path d="M1166 208H780" class="arrow-dash"/>
+  <text x="922" y="190" class="tiny">đọc / ghi phiên</text>
+
+  <!-- Redis scope -->
+  <rect x="48" y="254" width="1424" height="196" rx="18" class="panel-coral"/>
+  <text x="76" y="290" class="tag">REDIS RATE LIMITING · AUTHABUSEPROTECTIONSERVICE</text>
+  <text x="76" y="321" class="head">Giới hạn theo IP/email trong các luồng nhạy cảm</text>
+  <rect x="76" y="345" width="312" height="76" rx="12" class="panel"/>
+  <text x="96" y="374" class="label" font-weight="700">Đăng ký</text><text x="96" y="399" class="small">5 yêu cầu/IP/giờ · 3 yêu cầu/email/giờ</text>
+  <rect x="408" y="345" width="312" height="76" rx="12" class="panel"/>
+  <text x="428" y="374" class="label" font-weight="700">Đăng nhập</text><text x="428" y="399" class="small">60 request/IP/phút · sai 8/email, 60/IP/15 phút</text>
+  <rect x="740" y="345" width="312" height="76" rx="12" class="panel"/>
+  <text x="760" y="374" class="label" font-weight="700">Quên mật khẩu</text><text x="760" y="399" class="small">10 yêu cầu/IP · 3 yêu cầu/email/15 phút</text>
+  <rect x="1072" y="345" width="372" height="76" rx="12" class="panel"/>
+  <text x="1092" y="374" class="label" font-weight="700">Chống phát lại TOTP Admin</text><text x="1092" y="399" class="small">Đánh dấu mã đã dùng trong 90 giây</text>
+  <text x="76" y="438" class="tiny">Vượt ngưỡng → 429 + Retry-After theo TTL quota. Redis gián đoạn → fail-closed, trả 503; production bắt buộc REDIS_URL.</text>
+  <text x="76" y="458" class="tiny">Giới hạn IP dựa trên req.ip; khi đặt sau reverse proxy, cấu hình TRUST_PROXY_HOPS đúng với hạ tầng.</text>
+
+  <!-- Token flows -->
+  <text x="48" y="500" class="tag">SAU KHI ĐĂNG NHẬP THÀNH CÔNG</text>
+  <rect x="48" y="524" width="690" height="270" rx="18" class="panel-blue"/>
+  <text x="78" y="564" class="head">Access token · gửi kèm API cần xác thực</text>
+  <text x="78" y="596" class="mono">BE → response JSON → FE memory → Authorization: Bearer …</text>
+  <path d="M88 625H690" class="arrow"/>
+  <rect x="78" y="650" width="282" height="102" rx="13" class="panel"/>
+  <text x="98" y="680" class="label" font-weight="700">Access JWT · 15 phút</text>
+  <text x="98" y="705" class="small">FE giữ trong Zustand memory;</text><text x="98" y="726" class="small">không persist vào localStorage.</text>
+  <rect x="382" y="650" width="326" height="102" rx="13" class="panel"/>
+  <text x="402" y="680" class="label" font-weight="700">BE xác minh mỗi request</text>
+  <text x="402" y="705" class="small">Kiểm tra chữ ký/expiry, rồi kiểm tra</text><text x="402" y="726" class="small">thiết bị và loại phiên còn hiệu lực trong DB.</text>
+
+  <rect x="782" y="524" width="690" height="270" rx="18" class="panel-gold"/>
+  <text x="812" y="564" class="head">Refresh token · trình duyệt tự gửi bằng cookie</text>
+  <text x="812" y="596" class="mono">Set-Cookie HttpOnly → browser → POST /auth/client/refresh</text>
+  <path d="M820 625H1422" class="arrow-coral"/>
+  <rect x="812" y="650" width="282" height="102" rx="13" class="panel"/>
+  <text x="832" y="680" class="label" font-weight="700">Refresh JWT · 7 ngày</text>
+  <text x="832" y="705" class="small">Cookie HttpOnly, SameSite=Lax;</text><text x="832" y="726" class="small">Secure bật ở production · FE không đọc được.</text>
+  <rect x="1116" y="650" width="326" height="102" rx="13" class="panel"/>
+  <text x="1136" y="680" class="label" font-weight="700">BE kiểm tra và xoay token</text>
+  <text x="1136" y="705" class="small">SHA-256 token để tra phiên trong DB;</text><text x="1136" y="726" class="small">đánh dấu token cũ đã dùng, cấp token mới.</text>
+
+  <!-- Security notes -->
+  <rect x="48" y="824" width="1424" height="244" rx="18" class="panel"/>
+  <text x="78" y="865" class="tag">RANH GIỚI BẢO MẬT</text>
+  <rect x="78" y="890" width="420" height="132" rx="13" class="panel-blue"/>
+  <text x="102" y="923" class="label" font-weight="700">JWT được ký, không được mã hóa</text>
+  <text x="102" y="950" class="small">Chữ ký giúp phát hiện token bị sửa;</text><text x="102" y="973" class="small">payload vẫn có thể đọc được. Không nhét bí mật</text><text x="102" y="996" class="small">vào payload; HTTPS bảo vệ dữ liệu khi truyền.</text>
+  <rect x="528" y="890" width="420" height="132" rx="13" class="panel-coral"/>
+  <text x="552" y="923" class="label" font-weight="700">Mật khẩu và refresh token trong DB</text>
+  <text x="552" y="950" class="small">Mật khẩu băm bằng bcrypt; DB chỉ lưu</text><text x="552" y="973" class="small">SHA-256 hash của refresh token, không lưu</text><text x="552" y="996" class="small">refresh token thô.</text>
+  <rect x="978" y="890" width="464" height="132" rx="13" class="panel-gold"/>
+  <text x="1002" y="923" class="label" font-weight="700">Redis không phải kho phiên</text>
+  <text x="1002" y="950" class="small">Redis chỉ giữ bộ đếm và TOTP Admin đã dùng</text><text x="1002" y="973" class="small">có TTL; phiên đăng nhập, thiết bị, thu hồi</text><text x="1002" y="996" class="small">và vòng đời refresh token ở PostgreSQL.</text>
+</svg>

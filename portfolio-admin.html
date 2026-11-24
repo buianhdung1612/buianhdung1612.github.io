@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Store Operations Console | TeddyPet</title>
+  <meta name="description" content="TeddyPet Admin Console case study." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/project-base.css" />
+  <link rel="stylesheet" href="css/project.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><a href="projects.html">Projects</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><a href="teddypet-frontend.html">Storefront & Admin</a><span>/</span><span>Admin console</span></div>
+    <div class="eyebrow">TEDDYPET · ADMIN APPLICATION</div>
+    <h1 style="margin-top:20px">Store Operations Console</h1>
+    <p class="lead">A focused workspace for maintaining the catalog, stock, and customer-facing operations behind the storefront.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap project-case-study">
+<div class="note-box" style="margin-bottom:40px">Detailed note, written in English. The Vietnamese case study summarises this page. <a href="teddypet-frontend.html" style="color:var(--accent)">Storefront & Admin →</a> · <a href="vi/teddypet-frontend.html" style="color:var(--accent)">Storefront & Admin →</a></div>
+
+    
+    
+    <div class="project-cover"><img src="img/portfolio/admin-console-cover.svg" alt="TeddyPet admin inventory dashboard concept" /></div>
+    <div class="project-overview-grid">
+      <section class="project-case-block"><span class="project-section-index">01 / OPERATIONS GOAL</span><h2>Give staff a reliable view of store data.</h2><p>The admin app brings product and SKU management, categories, brands, orders, reviews, blog content, and settings into one console. It uses the same commerce API and domain rules as the customer storefront, with access controls for privileged actions.</p></section>
+      <aside class="project-facts"><div><span>Framework</span><strong>Next.js · React · TypeScript</strong></div><div><span>Remote state</span><strong>TanStack Query</strong></div><div><span>API</span><strong>NestJS REST</strong></div><div><span>Primary workflows</span><strong>Catalog · Inventory · Orders</strong></div></aside>
+    </div>
+    <section class="project-query-section"><div class="project-section-heading"><span class="project-section-index">02 / DATA GRID DESIGN</span><h2>What React Query owns here</h2><p>TanStack Query manages remote server state. Filter controls own the current selection; query keys and requests use the same normalized parameters.</p></div>
+      <div class="query-flow" aria-label="React Query data flow"><div><b>Filter state</b><span>status · stock · search · page</span></div><i class="lnr lnr-arrow-right"></i><div><b>Query key + request</b><span>same filters define cache and API input</span></div><i class="lnr lnr-arrow-right"></i><div><b>API + database</b><span>aggregate stock, then paginate</span></div></div>
+      <div class="project-query-grid">
+        <article><h3><span>01</span> Cache identity matches the request</h3><p>The product list uses <code>['products', queryParams]</code>. Search, status, stock, page, and page size affect the result, so normalized request parameters define both the key and the API request. Different filter states cannot accidentally share a cached page.</p></article>
+        <article><h3><span>02</span> Keep the table steady while paging</h3><p><code>keepPreviousData</code> keeps the last page visible while the next request runs. The table avoids flashing empty between pages, while loading state communicates that new results are on the way.</p></article>
+        <article><h3><span>03</span> Refresh the views affected by a write</h3><p>Product create, update, delete, restore, and permanent delete invalidate the <code>products</code> query family. Updating one product also refreshes its detail key. Review writes refresh the product and customer review views that depend on them.</p></article>
+        <article><h3><span>04</span> Filter inventory before pagination</h3><p>Stock status is based on summed SKU quantities: zero is out of stock, 1–20 is low stock, and above 20 is in stock. The API applies this before slicing pages, so page counts match the filtered result set.</p></article>
+      </div>
+      <p class="project-scale-note"><strong>Scale trade-off:</strong> SKU totals are aggregated in the database, while matching product IDs are paginated by the API. For a much larger catalog, move stock aggregation and page selection into one SQL query or maintain a stock summary.</p>
+      <div class="query-policy"><div><span class="project-section-index">CACHE POLICY</span><strong>30s stale time</strong><p>Recent results can be reused during short navigation between screens.</p></div><div><span class="project-section-index">FAILURE POLICY</span><strong>1 query retry</strong><p>A transient request failure gets one retry without an unbounded loop.</p></div><div><span class="project-section-index">WRITE STRATEGY</span><strong>Server-confirmed + invalidate</strong><p>Paginated lists take the API response as truth, then refresh affected queries.</p></div></div>
+    </section>
+    <section class="project-query-section" lang="vi"><div class="project-section-heading"><span class="project-section-index">03 / KIẾN TRÚC ADMIN</span><h2>Module theo nghiệp vụ, form dùng lại theo phạm vi.</h2><p>Cùng quy ước với Client: App Router giữ route; mỗi feature Admin sở hữu màn hình, hook, schema và API adapter; phần thực sự dùng chung nằm ngoài feature.</p></div><div class="project-query-grid"><article><h3><span>01</span> Form tạo/sửa dùng chung</h3><p>Product, Brand và Coupon dùng một form cho mỗi cặp route tạo/sửa. Form Product giữ chung validation, variant/SKU và bộ chọn ảnh; dữ liệu sửa được nạp theo ID.</p></article><article><h3><span>02</span> Ranh giới được kiểm tra</h3><p>Admin không import feature Client. UI và hook của feature không gọi HTTP trực tiếp; adapter giữ endpoint và contract. Architecture check chạy trước build cùng TypeScript và OpenAPI contract check.</p></article></div></section>
+    <section class="project-engineering-section"><div class="project-section-heading"><span class="project-section-index">04 / ENGINEERING DECISIONS</span><h2>Keep list behavior predictable.</h2></div><div class="project-decision-list">
+      <div><span>01</span><p><strong>Separate server state from UI state.</strong> The query cache owns API results; filter controls own the user’s current selection.</p></div>
+      <div><span>02</span><p><strong>Use resource-prefix invalidation.</strong> One product mutation can affect multiple filtered pages, so related active views refresh together.</p></div>
+      <div><span>03</span><p><strong>Let the API define stock filtering.</strong> Filtering only the loaded page would produce incomplete results and incorrect totals.</p></div>
+      <div><span>04</span><p><strong>Keep the data path inspectable.</strong> Query key, request parameters, endpoint, and database filter follow the same filter model.</p></div>
+    </div></section>
+    <section class="project-interview-note"><span class="project-section-index">INTERVIEW WALKTHROUGH</span><p>“The query key fully describes the list request, mutations invalidate the views they can change, and pagination keeps previous data visible during transitions. Stock filtering belongs in the API because filtering one page in the browser would misrepresent both the result set and its total.”</p></section>
+    <div class="project-footer-tags"><span>Next.js</span><span>TanStack Query</span><span>Query Keys</span><span>Pagination</span><span>Cache Invalidation</span><span>Inventory</span></div>
+  
+  <div style="margin-top:50px"><a class="btn btn-dark" href="teddypet-frontend.html">← Storefront & Admin</a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

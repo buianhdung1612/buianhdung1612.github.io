@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chuyên môn | Bùi Anh Dũng</title>
+  <meta name="description" content="Các mảng kỹ thuật mình làm: backend, thiết kế hệ thống, full stack, database, bảo mật và hệ thống thời gian thực." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../expertise.html" />
+  <link rel="alternate" hreflang="vi" href="expertise.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html" aria-current="page">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../expertise.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><span>Chuyên môn</span></div>
+    <div class="eyebrow">Chuyên môn</div>
+    <h1 style="margin-top:20px">Chuyên môn <span class="outline">kỹ thuật</span></h1>
+    <p class="lead">Sáu mảng mình làm, mỗi mảng gồm những gì trong thực tế, và bạn có thể thấy chúng ở đâu trong dự án của mình.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap"><div class="big-cards">
+  <article class="big-card reveal" id="backend" style="transition-delay:0ms"><div class="ic"><i class="lnr lnr-code" aria-hidden="true"></i></div><h2>Kỹ thuật Backend</h2><p>API và dịch vụ hoạt động ổn định, dễ đoán.</p><ul><li>Dịch vụ NestJS chia module, dữ liệu vào được kiểm tra</li><li>Danh sách dễ đoán: phân trang, lọc và sắp xếp</li><li>Endpoint ghi idempotent</li><li>Worker nền cho đơn hết hạn và vận đơn</li></ul><p class="card-links"><span>Xem trong</span><a href="teddypet-api-design.html">Thiết kế API →</a><a href="teddypet-checkout.html">Checkout & Tồn kho →</a></p></article>
+  <article class="big-card reveal" id="architecture" style="transition-delay:80ms"><div class="ic"><i class="lnr lnr-layers" aria-hidden="true"></i></div><h2>Thiết kế hệ thống &amp; Kiến trúc</h2><p>Ranh giới, hợp đồng và đánh đổi.</p><ul><li>Tách sản phẩm thành các dịch vụ sở hữu dữ liệu riêng</li><li>Xác thực giữa các dịch vụ bằng token ký, giới hạn phạm vi</li><li>Một hợp đồng API dùng chung cho backend và frontend</li><li>Ghi lại các đánh đổi, kể cả những gì chưa xây</li></ul><p class="card-links"><span>Xem trong</span><a href="teddypet.html#architecture">Kiến trúc TeddyPet →</a><a href="teddypet-media.html">Dịch vụ Media →</a></p></article>
+  <article class="big-card reveal" id="full-stack" style="transition-delay:160ms"><div class="ic"><i class="lnr lnr-laptop-phone" aria-hidden="true"></i></div><h2>Phát triển Full Stack</h2><p>Từ database tới giao diện.</p><ul><li>Render phía server và cache dữ liệu công khai khi cần SEO</li><li>TanStack Query và Zustand cho state server và client</li><li>Kiểm tra kiến trúc và hợp đồng API trong build</li><li>CMS soạn thảo có autosave và kiểm tra phiên bản</li></ul><p class="card-links"><span>Xem trong</span><a href="teddypet-frontend.html">Storefront & Admin →</a><a href="blog.html">Dev Journal →</a></p></article>
+  <article class="big-card reveal" id="data" style="transition-delay:0ms"><div class="ic"><i class="lnr lnr-database" aria-hidden="true"></i></div><h2>Database &amp; Kỹ thuật dữ liệu</h2><p>Mô hình hoá, transaction và nhất quán.</p><ul><li>Thiết kế schema và migration với Prisma</li><li>Transaction và mức cô lập khi ghi đồng thời</li><li>Giữ kho vẫn đúng khi có retry và request trùng</li><li>PostgreSQL, Redis và MongoDB, mỗi thứ cho một việc cụ thể</li></ul><p class="card-links"><span>Xem trong</span><a href="teddypet-checkout.html">Checkout & Tồn kho →</a><a href="blog.html">Bản đồ học database →</a></p></article>
+  <article class="big-card reveal" id="security" style="transition-delay:80ms"><div class="ic"><i class="lnr lnr-lock" aria-hidden="true"></i></div><h2>Bảo mật &amp; Độ tin cậy</h2><p>Phiên an toàn và lỗi có thể khôi phục.</p><ul><li>Access token ngắn hạn và refresh session xoay vòng</li><li>TOTP MFA, permission guard và rate limit bằng Redis</li><li>Callback thanh toán được xác minh và đối soát với nhà cung cấp</li><li>Trạng thái khôi phục rõ ràng thay vì lỗi im lặng</li></ul><p class="card-links"><span>Xem trong</span><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập →</a><a href="teddypet-payments.html">Thanh toán & Giao hàng →</a></p></article>
+  <article class="big-card reveal" id="real-time" style="transition-delay:160ms"><div class="ic"><i class="lnr lnr-bubble" aria-hidden="true"></i></div><h2>Hệ thống thời gian thực</h2><p>Cập nhật tức thời, vững khi kết nối lại.</p><ul><li>Socket.IO với Redis fan-out giữa các replica</li><li>Gửi tin idempotent và thứ tự tin nhắn ổn định</li><li>Transactional outbox cho sự kiện tin nhắn</li><li>Trạng thái online và rate limit trong Redis</li></ul><p class="card-links"><span>Xem trong</span><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực →</a></p></article>
+</div></div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

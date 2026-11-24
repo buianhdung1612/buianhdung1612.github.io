@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Storefront &amp; Admin | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="Một ứng dụng Next.js phục vụ cả storefront và trang quản trị, với quy tắc kiến trúc làm hỏng build khi vi phạm." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../teddypet-frontend.html" />
+  <link rel="alternate" hreflang="vi" href="teddypet-frontend.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../teddypet-frontend.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><a href="projects.html">Dự án</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Storefront & Admin</span></div>
+    <div class="eyebrow">TEDDYPET · STOREFRONT & ADMIN</div>
+    <h1 style="margin-top:20px">Frontend có <span class="outline">ranh giới</span> rõ ràng</h1>
+    <p class="lead">Một ứng dụng Next.js phục vụ cả storefront và trang quản trị, với quy tắc kiến trúc làm hỏng build khi vi phạm.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED · STATIC CHECKS PASSED (2026-11-06)</span><span class="pill">Next.js</span><span class="pill">React</span><span class="pill">TanStack Query</span><span class="pill">Zustand</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Vấn đề</small><p>Frontend lớn dần sẽ mục khi các feature import lẫn nhau và component gọi mạng trực tiếp.</p></div><div class="tldr-card"><small>Cách giải</small><p>Hai ứng dụng trong một repo với quy tắc import bị ép, API adapter theo từng feature, type API sinh tự động và chiến lược render có chủ đích.</p></div><div class="tldr-card"><small>Bằng chứng</small><p>Kiểm tra kiến trúc, API version, API contract và <code>tsc</code> đều pass ngày 2026-11-06; 85 trang route.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Vấn đề</div><div class="cs-body"><p class="lead">Storefront cộng trang quản trị nhanh chóng thành hàng trăm file. Không có quy tắc, code admin rò vào bundle của người mua, component tự gọi dữ liệu, và cache hành xử khó đoán.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Ràng buộc</div><div class="cs-body"><ul class="rule-list"><li>Code storefront và admin không bao giờ import lẫn nhau.</li><li>Component và page không gọi mạng trực tiếp; request thuộc về API adapter.</li><li>Trang công khai phải nhanh và đủ mới mà không gọi API ở mỗi lượt xem.</li><li>Checkout phải khôi phục được khi mất phản hồi.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Thiết kế</div><div class="cs-body"><ol class="design-steps"><li><h4>Ranh giới được ép bằng script</h4><p><code>scripts/check-architecture.mjs</code> chạy trước mỗi lần build: không import giữa <code>client/</code> và <code>admin/</code>, <code>shared/</code> không import cả hai, và page, component, hook của feature không được gọi <code>fetch</code> hay Axios client.</p></li><li><h4>State server và state cục bộ</h4><p>TanStack Query giữ dữ liệu server; Zustand giữ phiên và state UI cục bộ. Access token không được lưu bền và refresh được tuần tự bằng <code>navigator.locks</code>.</p></li><li><h4>Render có chủ đích</h4><p>Trang chủ dùng ISR, danh sách shop và blog render theo từng request, giỏ hàng, checkout và admin dùng query phía client. Dữ liệu công khai lấy bằng fetch chỉ chạy phía server qua Next.js Data Cache; Core gọi một endpoint revalidate có bảo vệ để hết hạn cache tag.</p></li><li><h4>Type sinh từ contract</h4><p>Type API được sinh từ file OpenAPI của backend, nên thay đổi backend gây vỡ sẽ làm hỏng bước kiểm tra frontend.</p></li><li><h4>Khôi phục checkout</h4><p>Checkout lưu idempotency key và payload trong session để mất phản hồi vẫn khôi phục được bằng cách gửi lại cùng request.</p></li><li><h4>Công cụ nội dung cho chủ shop</h4><p>Trình sửa bố cục trang sắp xếp và bật/tắt khối, xem trước bản nháp, xuất bản và làm mới cache công khai. Đánh giá sản phẩm đi qua kiểm duyệt. Giao diện có tiếng Anh và tiếng Việt.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Bằng chứng trong code</div><div class="cs-body"><ul class="evi-list"><li><code>Linh_FE/scripts/check-architecture.mjs</code><span>Quy tắc import và mạng làm hỏng build</span></li><li><code>Linh_FE/src/server/public-data.ts</code><span>Fetch công khai chỉ chạy phía server với Data Cache</span></li><li><code>Linh_FE/docs/CLIENT_CACHE_STRATEGY.md</code><span>Chiến lược cache</span></li><li><code>Linh_FE/docs/FRONTEND_ARCHITECTURE.md</code><span>Cấu trúc thư mục và phân lớp</span></li><li><code>Linh_FE/src/shared/api-contracts/generated.ts</code><span>Type API được sinh</span></li></ul><p class="src-note">Đường dẫn tính từ thư mục gốc của repo TeddyPet.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Kiểm chứng</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> Đã thể hiện</h4><ul><li>85 trang route trên storefront và trang quản trị.</li><li>Gộp giỏ hàng khi đăng nhập, checkout khôi phục idempotency, trang kết quả VNPay, các tính năng CRUD admin, trình sửa bố cục trang và khung chat.</li><li>Kiểm tra kiến trúc, API version, API contract và <code>tsc</code> đều pass ngày 2026-11-06.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Chưa kiểm chứng / chưa có</h4><ul><li>Chỉ có năm file test, đều cho logic. Chưa có test component hay end-to-end trên trình duyệt.</li><li>Bảo vệ route admin chạy phía client; chưa có middleware phía server. API vẫn kiểm quyền.</li><li>Chưa có Dockerfile và CI (<code>output: 'standalone'</code> đã được đặt sẵn).</li><li>Hai chỗ lệch đã biết với backend: trang thông báo admin và lời gọi xoá thư mục.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Đánh đổi</div><div class="cs-body"><div class="tradeoffs"><div><h4>Một repo, hai ứng dụng</h4><p>Công cụ và type dùng chung đơn giản, nhưng ranh giới phải do script canh giữ thay vì các package riêng.</p></div><div><h4>Guard admin phía client</h4><p>Làm nhanh, nhưng guard UI chỉ để trông ổn. Bảo vệ thật là permission guard của API.</p></div><div><h4>Type được sinh tự động</h4><p>Loại bỏ lệch pha, nhưng buộc phải chạy lại bước sinh sau mỗi thay đổi API.</p></div></div></div></section>
+  <div class="deep-box reveal"><h4>Ghi chú chi tiết</h4><ul><li><a href="../portfolio-client.html">Storefront khách hàng chi tiết</a><span class="pill">Tiếng Anh</span></li><li><a href="../portfolio-admin.html">Trang quản trị</a><span class="pill">Tiếng Anh</span></li><li><a href="../portfolio-feature-page-layout.html">Quản lý giao diện trang chủ</a><span class="pill">Tiếng Việt</span></li><li><a href="../portfolio-feature-reviews.html">Đánh giá sản phẩm có kiểm duyệt</a><span class="pill">Tiếng Việt</span></li></ul></div>
+  <div class="cs-nav"><a href="teddypet-media.html"><small>← Trước</small><strong>Dịch vụ Media</strong></a><a href="teddypet.html" style="text-align:right"><small>Về</small><strong>TeddyPet</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

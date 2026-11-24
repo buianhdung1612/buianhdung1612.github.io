@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thanh toán &amp; Giao hàng | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="VNPay và GHN được tích hợp quanh callback đã xác minh, đối soát và các trạng thái khôi phục rõ ràng." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../teddypet-payments.html" />
+  <link rel="alternate" hreflang="vi" href="teddypet-payments.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../teddypet-payments.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><a href="projects.html">Dự án</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Thanh toán & Giao hàng</span></div>
+    <div class="eyebrow">TEDDYPET · THANH TOÁN & GIAO HÀNG</div>
+    <h1 style="margin-top:20px">Thanh toán <span class="outline">không đoán mò</span></h1>
+    <p class="lead">VNPay và GHN được tích hợp quanh callback đã xác minh, đối soát và các trạng thái khôi phục rõ ràng.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED / TESTED (MOCKED PROVIDER)</span><span class="pill">VNPay</span><span class="pill">GHN</span><span class="pill">Reconciliation</span><span class="pill">Workers</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Vấn đề</small><p>Kết quả từ nhà cung cấp có thể đến muộn, đến hai lần, không đến, hoặc đến sau khi khách đã huỷ.</p></div><div class="tldr-card"><small>Cách giải</small><p>Tách trạng thái Order, Payment, Shipping; xác minh mọi callback; đối soát bằng QueryDR; gọi nhà cung cấp ngoài transaction database.</p></div><div class="tldr-card"><small>Bằng chứng</small><p>Kịch bản integration cho IPN đồng thời, IPN chạy đua với QueryDR, IPN bị giả mạo và tiền về sau khi huỷ (provider được mock).</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Vấn đề</div><div class="cs-body"><p class="lead">Kết quả thanh toán không phải thông điệp đáng tin. IPN có thể bị gửi hai lần, trễ quá hạn đơn, hoặc mất hẳn; Return URL của trình duyệt có thể bị giả hoặc đóng sớm. Nếu hệ thống đoán, nó sẽ giao đơn chưa trả tiền hoặc làm mất khoản tiền đã về thật.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Ràng buộc</div><div class="cs-body"><ul class="rule-list"><li>Chỉ kết quả đã xác minh (chữ ký, merchant, số tiền và attempt) mới được đổi trạng thái thanh toán.</li><li>IPN và QueryDR phải hội tụ về một kết quả, không settle hai lần.</li><li>Tiền về sau khi huỷ phải được ghi nhận, không âm thầm mở lại đơn hoặc bỏ qua.</li><li>Lời gọi VNPay và GHN không được chạy trong transaction database.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Thiết kế</div><div class="cs-body"><ol class="design-steps"><li><h4>Ba trạng thái tách biệt</h4><p>Order, Payment và Shipping được theo dõi riêng. Đơn COD tạo với <code>UNPAID</code> và không bao giờ coi là đã thu khi tạo đơn hay khi giao.</p></li><li><h4>Mỗi lần thử một attempt</h4><p>Mỗi lần thử VNPay là một PaymentAttempt có <code>txnRef</code> riêng. Attempt thất bại mà còn hạn có thể thử lại trên cùng đơn; retry không kéo dài hạn.</p></li><li><h4>Xác minh rồi mới settle</h4><p>IPN kiểm tra chữ ký, merchant, số tiền và attempt. Return URL chỉ đưa trình duyệt tới trang đọc trạng thái từ backend. IPN và QueryDR dùng chung <code>settleSuccess</code> và <code>settleFailure</code>, nên thành công đến từ cả hai đường chỉ được settle một lần.</p></li><li><h4>Đối soát thay vì chờ</h4><p>Khi mất IPN, QueryDR hỏi VNPay sự thật. Đơn mới dùng QueryDR trước khi huỷ; công tắc đối soát rộng hơn được cố ý tắt.</p></li><li><h4>Chưa rõ thì giữ nguyên là chưa rõ</h4><p>Kết quả không chắc chắn không bao giờ tự nhả kho. Sau 24 giờ nó chuyển sang review và chỉ admin mới nhả được. Tiền về muộn sau khi huỷ được ghi nhận và đánh dấu, không mở lại đơn hay tạo vận đơn.</p></li><li><h4>Giao hàng sau một cổng xác nhận</h4><p>Admin xác nhận đơn (còn giữ kho, không có payment review, VNPay phải PAID). Worker sau đó chiếm đơn có điều kiện và gọi GHN ngoài transaction, thử lại với cùng <code>client_order_code</code>.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Bằng chứng trong code</div><div class="cs-body"><ul class="evi-list"><li><code>Linh_BE/src/routes/payments/payment-settlement.service.ts</code><span>settleSuccess / settleFailure dùng chung</span></li><li><code>Linh_BE/src/routes/payments/payment-callback-receipt.service.ts</code><span>Lưu IPN thô</span></li><li><code>Linh_BE/src/routes/payments/payment-reconciliation.service.ts</code><span>Đối soát QueryDR</span></li><li><code>Linh_BE/src/routes/payments/providers/</code><span>Code provider VNPay</span></li><li><code>Linh_BE/docs/specs/payment-workflow.md</code><span>Thiết kế, vận hành và kế hoạch test</span></li></ul><p class="src-note">Đường dẫn tính từ thư mục gốc của repo TeddyPet.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Kiểm chứng</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> Đã thể hiện</h4><ul><li>Các IPN có chữ ký đến đồng thời được khử trùng và chỉ ghi một chuyển trạng thái tài chính.</li><li>IPN và QueryDR thành công đồng thời chỉ settle một lần.</li><li>IPN bị giả mạo bị từ chối và không ghi bằng chứng tài chính.</li><li>IPN có chữ ký đến sau khi khách huỷ vẫn giữ đơn đã huỷ, kho đã nhả, và ghi nhận khoản tiền.</li><li>Hết hạn được tuần tự hoá với thanh toán đến muộn và không bao giờ nhả kho hai lần.</li><li>Sau lỗi mạng từ provider, thanh toán giữ trạng thái chưa rõ rồi phục hồi khi thử lại.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Chưa kiểm chứng / chưa có</h4><ul><li>Các kịch bản này chạy với provider được mock. Chưa có bằng chứng một giao dịch VNPay Sandbox thật qua callback HTTPS công khai; file kiểm chứng đã lên sẵn checklist.</li><li>Hoàn tiền là thủ công: admin ghi nhận tiền gửi ngoài hệ thống. API hoàn tiền của VNPay chưa được dùng.</li><li>Không công bố con số throughput hay latency.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Đánh đổi</div><div class="cs-body"><div class="tradeoffs"><div><h4>Chậm hơn nhưng không sai</h4><p>Giữ kho quá hạn để IPN có chữ ký đến muộn vẫn settle được đơn còn sống tốn thời gian tồn kho, nhưng tránh bán lại hàng đã được trả tiền.</p></div><div><h4>Hoàn tiền thủ công</h4><p>Giữ hoàn tiền ở dạng ghi nhận thủ công tránh một luồng tự động làm dở, và để lại một khoảng trống thật cho sau này.</p></div><div><h4>Worker chạy trong tiến trình</h4><p>Job nền dùng cron trong tiến trình (<code>@nestjs/schedule</code>) thay cho message broker, giữ stack gọn nhưng việc chiếm job dựa vào update có điều kiện trong database.</p></div></div></div></section>
+  <div class="deep-box reveal"><h4>Ghi chú chi tiết</h4><ul><li><a href="../portfolio-payment-system.html">Luồng đặt hàng và thanh toán đầy đủ kèm sơ đồ</a><span class="pill">Tiếng Việt</span></li></ul></div>
+  <div class="cs-nav"><a href="teddypet-checkout.html"><small>← Trước</small><strong>Checkout & Tồn kho</strong></a><a href="teddypet-auth.html" style="text-align:right"><small>Tiếp →</small><strong>Xác thực & Phiên đăng nhập</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

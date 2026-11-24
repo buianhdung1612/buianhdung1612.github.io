@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dự án | Bùi Anh Dũng</title>
+  <meta name="description" content="TeddyPet, Dev Journal và các case study kỹ thuật đằng sau chúng." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../projects.html" />
+  <link rel="alternate" hreflang="vi" href="projects.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../projects.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><span>Dự án</span></div>
+    <div class="eyebrow">Dự án</div>
+    <h1 style="margin-top:20px">Dự án &amp; <span class="outline">case study</span></h1>
+    <p class="lead">Hai dự án và các case study kỹ thuật đằng sau chúng. Mỗi case study nêu rõ cái gì đã cài đặt, cái gì đã test và cái gì chưa kiểm chứng.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap">
+  <div class="split-head reveal" style="margin-bottom:40px"><div class="eyebrow">Dự án</div><h2 class="h2" style="font-size:34px">Bắt đầu từ đây.</h2></div>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <a class="card reveal" href="teddypet.html"><div class="card-img"><img src="../img/portfolio/petcommerce-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">DỰ ÁN CHÍNH · FULLSTACK / BACKEND</span><h3>Nền tảng thương mại TeddyPet</h3><p>Storefront, trang quản trị, API thương mại, dịch vụ media và chat hỗ trợ. Tổng quan, kiến trúc và bảng kỹ năng đối chiếu bằng chứng.</p><span class="more">Xem tổng quan →</span></div></a>
+    <a class="card reveal" href="blog.html"><div class="card-img"><img src="../img/portfolio/dev-journal-home.webp" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge warn">BLOG DẠY HỌC · CHƯA TRIỂN KHAI</span><h3>Dev Journal</h3><p>Blog kỹ thuật dạy học với CMS một tác giả tự xây: Next.js, Tiptap, Prisma, PostgreSQL và đăng nhập GitHub.</p><span class="more">Mở trang blog →</span></div></a>
+  </div>
+</div></section>
+<section class="section pt-0"><div class="wrap">
+  <div class="split-head reveal" style="margin-bottom:40px"><div class="eyebrow">Case study · Backend</div><h2 class="h2" style="font-size:34px">Những vấn đề đã định hình API.</h2></div>
+  <div class="card-grid">
+    <a class="card reveal" href="teddypet-checkout.html"><div class="card-img"><img src="../img/portfolio/backend-api-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · TEST CASES IN REPO</span><h3>Checkout & Tồn kho</h3><p>Cách TeddyPet giữ kho, mã giảm giá và đơn hàng nhất quán khi các request chạy đua, retry hoặc đến hai lần.</p><span class="more">Đọc case study →</span></div></a>
+    <a class="card reveal" href="teddypet-payments.html"><div class="card-img"><img src="../img/portfolio/order-payment-flow.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED / TESTED (MOCKED PROVIDER)</span><h3>Thanh toán & Giao hàng</h3><p>VNPay và GHN được tích hợp quanh callback đã xác minh, đối soát và các trạng thái khôi phục rõ ràng.</p><span class="more">Đọc case study →</span></div></a>
+    <a class="card reveal" href="teddypet-auth.html"><div class="card-img"><img src="../img/portfolio/backend-auth-flow.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED</span><h3>Xác thực & Phiên đăng nhập</h3><p>Access token ngắn hạn, refresh session xoay vòng, MFA và giới hạn lạm dụng, thiết kế để logout nghĩa là logout thật.</p><span class="more">Đọc case study →</span></div></a>
+    <a class="card reveal" href="teddypet-api-design.html"><div class="card-img"><img src="../img/portfolio/backend-api-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED</span><h3>Thiết kế API</h3><p>Đầu vào được kiểm tra, danh sách dự đoán được, và một file OpenAPI để sinh type cho frontend.</p><span class="more">Đọc case study →</span></div></a>
+  </div>
+</div></section>
+<section class="section pt-0"><div class="wrap">
+  <div class="split-head reveal" style="margin-bottom:40px"><div class="eyebrow">Case study · Hệ thống &amp; frontend</div><h2 class="h2" style="font-size:34px">Các dịch vụ quanh lõi, và ứng dụng phía trên.</h2></div>
+  <div class="card-grid">
+    <a class="card reveal" href="teddypet-chat.html"><div class="card-img"><img src="../img/portfolio/backend-auth-flow.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · COVERED BY TESTS (2026-11-15)</span><h3>Chat hỗ trợ thời gian thực</h3><p>Dịch vụ chat khách và nhân viên tách riêng, gửi tin idempotent, thứ tự tin nhắn ổn định và replica đặt sau Nginx.</p><span class="more">Đọc case study →</span></div></a>
+    <a class="card reveal" href="teddypet-media.html"><div class="card-img"><img src="../img/portfolio/file-manager-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · NO AUTOMATED TESTS</span><h3>Dịch vụ Media</h3><p>Dịch vụ media tự host với ticket upload dùng một lần, kiểm tra loại file và sinh ảnh phái sinh.</p><span class="more">Đọc case study →</span></div></a>
+    <a class="card reveal" href="teddypet-frontend.html"><div class="card-img"><img src="../img/portfolio/client-app-cover.svg" alt="" loading="lazy" /></div><div class="card-body"><span class="status-badge">IMPLEMENTED · STATIC CHECKS PASSED (2026-11-06)</span><h3>Storefront & Admin</h3><p>Một ứng dụng Next.js phục vụ cả storefront và trang quản trị, với quy tắc kiến trúc làm hỏng build khi vi phạm.</p><span class="more">Đọc case study →</span></div></a>
+  </div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

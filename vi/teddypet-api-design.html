@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="vi" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thiết kế API | TeddyPet | Bùi Anh Dũng</title>
+  <meta name="description" content="Đầu vào được kiểm tra, danh sách dự đoán được, và một file OpenAPI để sinh type cho frontend." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="../favicon.ico" />
+  <link rel="alternate" hreflang="en" href="../teddypet-api-design.html" />
+  <link rel="alternate" hreflang="vi" href="teddypet-api-design.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Bỏ qua tới nội dung</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Trang chủ</a></li>
+        <li><a href="about.html">Giới thiệu</a></li>
+        <li><a href="expertise.html">Chuyên môn</a></li>
+        <li class="has-sub"><a href="projects.html" aria-current="page">Dự án <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Dự án</div><a href="teddypet.html">Nền tảng TeddyPet</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case study · Backend</div><a href="teddypet-checkout.html">Checkout & Tồn kho</a><a href="teddypet-payments.html">Thanh toán & Giao hàng</a><a href="teddypet-auth.html">Xác thực & Phiên đăng nhập</a><a href="teddypet-api-design.html">Thiết kế API</a><div class="sub-label">Case study · Hệ thống &amp; frontend</div><a href="teddypet-chat.html">Chat hỗ trợ thời gian thực</a><a href="teddypet-media.html">Dịch vụ Media</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../teddypet-api-design.html"  hreflang="en" lang="en">EN</a>
+      <a href="#" aria-current="true" hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero compact">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Trang chủ</a><span>/</span><a href="projects.html">Dự án</a><span>/</span><a href="teddypet.html">TeddyPet</a><span>/</span><span>Thiết kế API</span></div>
+    <div class="eyebrow">TEDDYPET · THIẾT KẾ API</div>
+    <h1 style="margin-top:20px">API có <span class="outline">hợp đồng</span> rõ ràng</h1>
+    <p class="lead">Đầu vào được kiểm tra, danh sách dự đoán được, và một file OpenAPI để sinh type cho frontend.</p>
+    <div class="cs-meta"><span class="status-badge">IMPLEMENTED</span><span class="pill">NestJS</span><span class="pill">Zod</span><span class="pill">OpenAPI</span><span class="pill">Pagination</span></div>
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap cs">
+  <div class="tldr reveal"><div class="tldr-head">TL;DR</div><div class="tldr-card"><small>Vấn đề</small><p>Backend và frontend lệch nhau, các endpoint danh sách hành xử khác nhau, đầu vào sai lọt vào code nghiệp vụ.</p></div><div class="tldr-card"><small>Cách giải</small><p>Zod DTO, filter và sort theo allowlist với thứ tự xác định, tiền là số nguyên, OpenAPI được xuất rồi sinh type cho frontend.</p></div><div class="tldr-card"><small>Bằng chứng</small><p>Build frontend kiểm tra contract sinh ra; typecheck, API version và architecture check đều pass ngày 2026-11-06.</p></div></div>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">01</span>Vấn đề</div><div class="cs-body"><p class="lead">Với một shop cỡ này, nhiều endpoint được viết dần qua nhiều tháng bởi một người. Không có hợp đồng, các trang danh sách phân trang khác nhau, sắp xếp không ổn định giữa các trang, tiền dạng số thực len vào, và frontend phải đoán hình dạng response.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">02</span>Ràng buộc</div><div class="cs-body"><ul class="rule-list"><li>Mọi danh sách dùng cùng một hợp đồng phân trang và thứ tự ổn định.</li><li>Chỉ field trong allowlist mới được lọc hoặc sắp xếp, nên không query nào đụng cột chưa có index.</li><li>Tiền luôn là số nguyên VND.</li><li>Thay đổi backend làm hỏng frontend phải làm hỏng build, không phải hỏng production.</li></ul></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">03</span>Thiết kế</div><div class="cs-body"><ol class="design-steps"><li><h4>Kiểm tra ở biên</h4><p>Controller dùng Zod DTO qua <code>createZodDto</code> và một <code>ZodValidationPipe</code> khai báo trên từng controller.</p></li><li><h4>Danh sách dự đoán được</h4><p>Endpoint danh sách dùng <code>page</code> / <code>pageSize</code> với giới hạn chung, allowlist filter và sort theo từng resource, và thứ tự xác định. Lọc và sắp xếp theo giá dùng giá bán thấp nhất được cập nhật trong transaction trên các SKU đang bán.</p></li><li><h4>Quy ước route và quyền</h4><p>Route nằm dưới <code>admin/*</code> và <code>client/*</code>; permission guard đối chiếu method và path với các dòng quyền của vai trò.</p></li><li><h4>Contract trước, type được sinh ra</h4><p><code>npm run openapi:export</code> ghi <code>openapi-v1.json</code>; frontend sinh type API từ file đó và <code>api-contract:check</code> kiểm tra trong lúc build.</p></li><li><h4>Idempotency là công cụ dùng chung</h4><p>Helper idempotency của checkout là service dùng chung, nên các endpoint ghi khác có thể dùng lại cùng ngữ nghĩa key và payload.</p></li></ol></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">04</span>Bằng chứng trong code</div><div class="cs-body"><ul class="evi-list"><li><code>Linh_BE/src/shared/api-contract/pagination/</code><span>Giới hạn phân trang và metadata response dùng chung</span></li><li><code>Linh_BE/docs/API_QUERY_DESIGN.md</code><span>Hợp đồng danh sách và ví dụ</span></li><li><code>Linh_BE/docs/API_GOVERNANCE.md</code><span>Quy tắc quản trị API</span></li><li><code>Linh_BE/openapi/openapi-v1.json</code><span>Contract đã xuất</span></li><li><code>Linh_FE/src/shared/api-contracts/generated.ts</code><span>Type sinh từ contract</span></li></ul><p class="src-note">Đường dẫn tính từ thư mục gốc của repo TeddyPet.</p></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">05</span>Kiểm chứng</div><div class="cs-body"><div class="verify"><div class="verify-col ok"><h4><i class="fas fa-check-circle"></i> Đã thể hiện</h4><ul><li>Phân trang, allowlist và thứ tự xác định được dùng chung giữa các endpoint danh sách.</li><li>Kiểm tra kiến trúc frontend, API version, API contract và <code>tsc</code> đều pass ngày 2026-11-06.</li><li>Mười hai quyết định thiết kế API được viết chi tiết ở phần ghi chú bên dưới.</li></ul></div><div class="verify-col no"><h4><i class="fas fa-exclamation-circle"></i> Chưa kiểm chứng / chưa có</h4><ul><li>Controller <code>cart</code> và <code>wishlist</code> chưa dùng <code>ZodValidationPipe</code>, nên giới hạn như số lượng 1–99 chưa được ép ở đó.</li><li>Rate limit hiện chỉ có cho xác thực. Chưa thấy rate limiter chung và <code>helmet</code>; đây là việc cần đóng trước khi ra mắt công khai.</li><li>Trang thông báo của admin gọi một endpoint mà backend chưa phục vụ.</li></ul></div></div></div></section>
+  <section class="cs-sec reveal"><div class="cs-label"><span class="cs-num">06</span>Đánh đổi</div><div class="cs-body"><div class="tradeoffs"><div><h4>Pipe khai báo theo từng controller</h4><p>Khai báo pipe trên từng controller thì tường minh, nhưng controller mới quên khai báo sẽ âm thầm bỏ qua kiểm tra. Pipe toàn cục sẽ loại rủi ro này.</p></div><div><h4>Allowlist làm giảm linh hoạt</h4><p>Field filter và sort cố định giữ query an toàn và có index, đổi lại thêm field mới cần sửa code nhỏ.</p></div><div><h4>Lệch contract bị bắt khá muộn</h4><p>Sinh type bắt lỗi ở lúc build frontend, không phải lúc commit backend.</p></div></div></div></section>
+  <div class="deep-box reveal"><h4>Ghi chú chi tiết</h4><ul><li><a href="../portfolio-feature-api-design.html">Mười hai quyết định thiết kế API chi tiết</a><span class="pill">Tiếng Việt</span></li><li><a href="../portfolio-backend.html">Tổng quan thiết kế backend</a><span class="pill">Tiếng Anh</span></li></ul></div>
+  <div class="cs-nav"><a href="teddypet-auth.html"><small>← Trước</small><strong>Xác thực & Phiên đăng nhập</strong></a><a href="teddypet-chat.html" style="text-align:right"><small>Tiếp →</small><strong>Chat hỗ trợ thời gian thực</strong></a></div>
+</div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="../img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Xây phần mềm đáng tin cậy. Giải những bài toán có ý nghĩa.</h3>
+        <div class="footer-contact">
+          <div><h5>Liên hệ</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Địa điểm</h5><p>TP. Hồ Chí Minh, Việt Nam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Liên kết</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Trang chủ</a>
+          <a href="about.html">Giới thiệu</a>
+          <a href="expertise.html">Chuyên môn</a>
+          <a href="projects.html">Dự án</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Liên hệ</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Có cơ hội, ý tưởng hay một bài toán kỹ thuật thú vị? Hãy kết nối.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Gửi email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. Bảo lưu mọi quyền.</span><span>Học. Xây. Chia sẻ.</span></div>
+  </div>
+</footer>
+<script src="../js/main.js"></script>
+</body>
+</html>

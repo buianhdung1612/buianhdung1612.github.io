@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Expertise | Bùi Anh Dũng</title>
+  <meta name="description" content="Engineering areas I work in: backend, system design, full stack, databases, security and real-time systems." />
+  <meta name="theme-color" content="#121212" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="alternate" hreflang="en" href="expertise.html" />
+  <link rel="alternate" hreflang="vi" href="vi/expertise.html" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body class="">
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <a class="logo" href="index.html" aria-label="Bùi Anh Dũng"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="48" /></a>
+    <nav class="main-nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Me</a></li>
+        <li><a href="expertise.html" aria-current="page">Expertise</a></li>
+        <li class="has-sub"><a href="projects.html">Projects <i class="fas fa-chevron-down" aria-hidden="true"></i></a>
+          <div class="sub-menu"><div class="sub-label">Projects</div><a href="teddypet.html">TeddyPet platform</a><a href="blog.html">Dev Journal</a><div class="sub-label">Case studies · Backend</div><a href="teddypet-checkout.html">Checkout & Inventory</a><a href="teddypet-payments.html">Payments & Fulfilment</a><a href="teddypet-auth.html">Authentication & Sessions</a><a href="teddypet-api-design.html">API Design</a><div class="sub-label">Case studies · Systems &amp; frontend</div><a href="teddypet-chat.html">Real-time Support Chat</a><a href="teddypet-media.html">Media Service</a><a href="teddypet-frontend.html">Storefront & Admin</a></div></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="lang-switch" role="group" aria-label="Language">
+      <a href="#" aria-current="true" hreflang="en" lang="en">EN</a>
+      <a href="vi/expertise.html"  hreflang="vi" lang="vi">VI</a>
+    </div>
+      
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a><span>/</span><span>Expertise</span></div>
+    <div class="eyebrow">Expertise</div>
+    <h1 style="margin-top:20px">Engineering <span class="outline">expertise</span></h1>
+    <p class="lead">Six areas I work in, what each one covers in practice, and where you can see it in my projects.</p>
+    
+  </div>
+</section>
+<section class="section pt-0"><div class="wrap"><div class="big-cards">
+  <article class="big-card reveal" id="backend" style="transition-delay:0ms"><div class="ic"><i class="lnr lnr-code" aria-hidden="true"></i></div><h2>Backend Engineering</h2><p>APIs and services that behave predictably.</p><ul><li>Modular NestJS services with validated input</li><li>Predictable lists: pagination, filtering and sorting</li><li>Idempotent write endpoints</li><li>Background workers for expiring orders and shipments</li></ul><p class="card-links"><span>See it in</span><a href="teddypet-api-design.html">API Design →</a><a href="teddypet-checkout.html">Checkout & Inventory →</a></p></article>
+  <article class="big-card reveal" id="architecture" style="transition-delay:80ms"><div class="ic"><i class="lnr lnr-layers" aria-hidden="true"></i></div><h2>System Design &amp; Architecture</h2><p>Boundaries, contracts and trade-offs.</p><ul><li>Splitting a product into services that own their data</li><li>Service-to-service auth with scoped, signed tokens</li><li>One API contract shared by backend and frontend</li><li>Writing down trade-offs, including what is not built yet</li></ul><p class="card-links"><span>See it in</span><a href="teddypet.html#architecture">TeddyPet architecture →</a><a href="teddypet-media.html">Media Service →</a></p></article>
+  <article class="big-card reveal" id="full-stack" style="transition-delay:160ms"><div class="ic"><i class="lnr lnr-laptop-phone" aria-hidden="true"></i></div><h2>Full Stack Development</h2><p>From the database to the interface.</p><ul><li>Server rendering and cached public data where SEO matters</li><li>TanStack Query and Zustand for server and client state</li><li>Architecture and API-contract checks in the build</li><li>A rich-text CMS with autosave and version checks</li></ul><p class="card-links"><span>See it in</span><a href="teddypet-frontend.html">Storefront & Admin →</a><a href="blog.html">Dev Journal →</a></p></article>
+  <article class="big-card reveal" id="data" style="transition-delay:0ms"><div class="ic"><i class="lnr lnr-database" aria-hidden="true"></i></div><h2>Database &amp; Data Engineering</h2><p>Modelling, transactions and consistency.</p><ul><li>Schema design and migrations with Prisma</li><li>Transactions and isolation levels under concurrent writes</li><li>Stock reservation that survives retries and duplicates</li><li>PostgreSQL, Redis and MongoDB, each for a specific job</li></ul><p class="card-links"><span>See it in</span><a href="teddypet-checkout.html">Checkout & Inventory →</a><a href="blog.html">Database learning map →</a></p></article>
+  <article class="big-card reveal" id="security" style="transition-delay:80ms"><div class="ic"><i class="lnr lnr-lock" aria-hidden="true"></i></div><h2>Security &amp; Reliability</h2><p>Safe sessions and recoverable failures.</p><ul><li>Short-lived access tokens and rotating refresh sessions</li><li>TOTP MFA, permission guards and Redis-backed rate limits</li><li>Verified payment callbacks and provider reconciliation</li><li>Explicit recovery states instead of silent failures</li></ul><p class="card-links"><span>See it in</span><a href="teddypet-auth.html">Authentication & Sessions →</a><a href="teddypet-payments.html">Payments & Fulfilment →</a></p></article>
+  <article class="big-card reveal" id="real-time" style="transition-delay:160ms"><div class="ic"><i class="lnr lnr-bubble" aria-hidden="true"></i></div><h2>Real-time Systems</h2><p>Live updates that survive reconnects.</p><ul><li>Socket.IO with Redis fan-out across replicas</li><li>Idempotent sends and a stable message order</li><li>Transactional outbox for message events</li><li>Presence and rate limits in Redis</li></ul><p class="card-links"><span>See it in</span><a href="teddypet-chat.html">Real-time Support Chat →</a></p></article>
+</div></div></section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="logo" href="index.html"><img src="img/brand/bad-logo-header.png" alt="Bùi Anh Dũng" height="40" /></a>
+        <h3>Building reliable software. Solving meaningful problems.</h3>
+        <div class="footer-contact">
+          <div><h5>Contact</h5><a href="mailto:buianh09dung@gmail.com">buianh09dung@gmail.com</a><a href="tel:+84346587796">0346 587 796</a></div>
+          <div><h5>Location</h5><p>Ho Chi Minh City, Vietnam</p></div>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <nav class="quick-links" aria-label="Footer">
+          <a href="index.html">Home</a>
+          <a href="about.html">About Me</a>
+          <a href="expertise.html">Expertise</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-news">
+        <h3>Have an opportunity, an idea, or an interesting engineering challenge? Let's connect.</h3>
+        <div class="footer-box"><span>buianh09dung@gmail.com</span><a class="btn btn-mint" href="mailto:buianh09dung@gmail.com">Send Email</a></div>
+        <div class="footer-social"><h4>Social</h4><div class="socials">
+        <a href="https://github.com/buianhdung1612" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        
+        <a href="mailto:buianh09dung@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+      </div></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Bùi Anh Dũng. All rights reserved.</span><span>Learn. Build. Share.</span></div>
+  </div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>
